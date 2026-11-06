@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jalolov Zoirjon | Developer & Project Manager</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'media',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Zamonaviy dasturchilar uslubidagi to'r foni */
+    .dev-grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    }
+    @media (prefers-color-scheme: dark) {
+      .dev-grid-pattern {
+        background-image: 
+          linear-gradient(to right, rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 dev-grid-pattern transition-colors duration-300 flex flex-col justify-between items-center p-4 sm:p-6 antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- Yuqori fon nurlanish effekti (Glow) -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-gradient-to-b from-indigo-500/15 via-purple-500/10 to-transparent blur-3xl pointer-events-none -z-10"></div>
+
+  <!-- Asosiy Konteyner -->
+  <main class="w-full max-w-lg mx-auto flex flex-col items-center flex-grow pt-8 sm:pt-12 pb-8">
+    
+    <!-- Profil Bo'limi -->
+    <header class="flex flex-col items-center text-center w-full mb-6">
+      
+      <!-- Odam / Dasturchi Avatar Ikonkasi -->
+      <div class="relative group mb-5">
+        <div class="absolute -inset-1.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 opacity-80 blur-md group-hover:opacity-100 transition duration-300 group-hover:blur-lg"></div>
+        <div class="relative w-28 h-28 rounded-full bg-slate-900 border-2 border-indigo-400/40 flex items-center justify-center text-white shadow-xl overflow-hidden">
+          <!-- Odam ikonkasi -->
+          <div class="w-full h-full bg-gradient-to-b from-slate-800 to-slate-950 flex items-center justify-center">
+            <i class="fa-solid fa-user-tie text-5xl text-indigo-400 group-hover:scale-110 transition-transform duration-300"></i>
+          </div>
+        </div>
+        
+        <!-- Tajriba belgisi -->
+        <div class="absolute -bottom-1 -right-1 px-2.5 py-0.5 rounded-full bg-indigo-600 border-2 border-white dark:border-[#0B0F19] text-[11px] font-bold text-white shadow-sm flex items-center gap-1 font-mono">
+          <i class="fa-solid fa-code text-[10px]"></i> 5+ Yil
+        </div>
+      </div>
+
+      <!-- Ism & Tasdiqlanganlik -->
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center justify-center gap-2">
+        Jalolov Zoirjon
+        <span class="inline-flex items-center justify-center text-blue-500" title="Tasdiqlangan mutaxassis">
+          <i class="fa-solid fa-circle-check text-xl"></i>
+        </span>
+      </h1>
+
+      <!-- Kasb va Lavozim -->
+      <div class="flex items-center gap-2 mt-1.5 mb-3 flex-wrap justify-center">
+        <span class="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60">
+          <i class="fa-solid fa-laptop-code mr-1"></i> Senior Dasturchi
+        </span>
+        <span class="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+          <i class="fa-solid fa-list-check mr-1"></i> Loyiha Menejeri (PM)
+        </span>
+      </div>
+
+      <!-- Bio / Tavsif -->
+      <p class="text-sm text-slate-600 dark:text-slate-300 max-w-md leading-relaxed px-2">
+        5 yillik professional tajribaga ega dasturchi va IT loyihalar boshqaruvchisi. Yuqori yuklamali tizimlar, zamonaviy veb-ilovalarni arxitekturasi va jamoalarni muvaffaqiyatli boshqarish bo'yicha mutaxassis.
+      </p>
+
+      <!-- Tezkor Statistika Kartochkalari (Developer Stats) -->
+      <div class="grid grid-cols-3 gap-2.5 w-full mt-5 px-1">
+        <div class="p-3 rounded-xl bg-white/70 dark:bg-slate-900/60 backdrop-blur border border-slate-200 dark:border-slate-800/80 shadow-sm flex flex-col items-center">
+          <span class="text-base sm:text-lg font-bold font-mono text-indigo-600 dark:text-indigo-400">5+ Yil</span>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Tajriba</span>
+        </div>
+        <div class="p-3 rounded-xl bg-white/70 dark:bg-slate-900/60 backdrop-blur border border-slate-200 dark:border-slate-800/80 shadow-sm flex flex-col items-center">
+          <span class="text-base sm:text-lg font-bold font-mono text-emerald-600 dark:text-emerald-400">30+</span>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Loyihalar</span>
+        </div>
+        <div class="p-3 rounded-xl bg-white/70 dark:bg-slate-900/60 backdrop-blur border border-slate-200 dark:border-slate-800/80 shadow-sm flex flex-col items-center">
+          <span class="text-base sm:text-lg font-bold font-mono text-amber-500 dark:text-amber-400">100%</span>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Natija</span>
+        </div>
+      </div>
+
+      <!-- Tech Stack belgilari -->
+      <div class="flex items-center justify-center gap-1.5 flex-wrap mt-4 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+        <span class="px-2 py-0.5 rounded bg-slate-200/60 dark:bg-slate-800/60">JavaScript</span>
+        <span class="px-2 py-0.5 rounded bg-slate-200/60 dark:bg-slate-800/60">TypeScript</span>
+        <span class="px-2 py-0.5 rounded bg-slate-200/60 dark:bg-slate-800/60">React / Next.js</span>
+        <span class="px-2 py-0.5 rounded bg-slate-200/60 dark:bg-slate-800/60">Node.js</span>
+        <span class="px-2 py-0.5 rounded bg-slate-200/60 dark:bg-slate-800/60">Agile & Scrum</span>
+      </div>
+
+    </header>
+
+    <!-- Dinamik Havolalar Bo'limi -->
+    <section id="links-container" class="w-full flex flex-col gap-3.5 mb-8">
+      <!-- JavaScript orqali to'ldiriladi -->
+    </section>
+
+  </main>
+
+  <!-- Sahifa Pastki Qismi: Ijtimoiy Tarmoqlar & Footer -->
+  <footer class="w-full max-w-lg mx-auto flex flex-col items-center gap-4 pb-4">
+    
+    <!-- Dumaloq Ijtimoiy Tarmoqlar Qatori -->
+    <nav class="flex items-center justify-center gap-3.5" aria-label="Ijtimoiy tarmoqlar">
+      <!-- Telegram -->
+      <a 
+        href="https://t.me/z_jalolov" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        aria-label="Telegram: z_jalolov" 
+        class="group w-12 h-12 flex items-center justify-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-sky-500 hover:border-sky-500/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-sky-500/10 transition-all duration-200"
+      >
+        <i class="fa-brands fa-telegram text-xl group-hover:scale-110 transition-transform"></i>
+      </a>
+
+      <!-- Instagram -->
+      <a 
+        href="https://instagram.com/z_jalolov" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        aria-label="Instagram: z_jalolov" 
+        class="group w-12 h-12 flex items-center justify-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-pink-500 hover:border-pink-500/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-500/10 transition-all duration-200"
+      >
+        <i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i>
+      </a>
+
+      <!-- GitHub -->
+      <a 
+        href="https://github.com/z_jalolov" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        aria-label="GitHub" 
+        class="group w-12 h-12 flex items-center justify-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-500 hover:border-indigo-500/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-200"
+      >
+        <i class="fa-brands fa-github text-xl group-hover:scale-110 transition-transform"></i>
+      </a>
+
+      <!-- LinkedIn -->
+      <a 
+        href="https://linkedin.com/in/z_jalolov" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        aria-label="LinkedIn" 
+        class="group w-12 h-12 flex items-center justify-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 hover:border-blue-600/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-600/10 transition-all duration-200"
+      >
+        <i class="fa-brands fa-linkedin-in text-xl group-hover:scale-110 transition-transform"></i>
+      </a>
+    </nav>
+
+    <!-- Mualliflik Huquqi -->
+    <p class="text-xs text-slate-500 dark:text-slate-500 font-mono tracking-wide">
+      &copy; <span id="current-year"></span> Jalolov Zoirjon. Barcha huquqlar himoyalangan.
+    </p>
+  </footer>
+
+  <!-- JavaScript Kodlari -->
+  <script>
+    // Dasturchi va PM havolalari ro'yxati (linksData)
+    const linksData = [
+      {
+        title: "Portfolio & Amalga Oshirilgan Loyihalar",
+        subtitle: "Eng yaxshi keyslar va veb-tizimlar bilan tanishing",
+        url: "https://t.me/z_jalolov",
+        icon: "fa-solid fa-code-merge",
+        badge: "Yangi"
+      },
+      {
+        title: "Telegram Orqali Bog'lanish (@z_jalolov)",
+        subtitle: "Savollar, takliflar yoki tezkor muloqot uchun",
+        url: "https://t.me/z_jalolov",
+        icon: "fa-brands fa-telegram",
+        badge: "Tezkor"
+      },
+      {
+        title: "Loyiha Boshqaruvi & IT Konsultatsiya",
+        subtitle: "Loyiha arxitekturasi va jamoani shakllantirish bo'yicha maslahat",
+        url: "https://t.me/z_jalolov",
+        icon: "fa-solid fa-diagram-project"
+      },
+      {
+        title: "Rezyume / CV (PDF formatda)",
+        subtitle: "5 yillik ish tajribasi va texnik ko'nikmalar to'plami",
+        url: "#",
+        icon: "fa-solid fa-file-code"
+      },
+      {
+        title: "Instagram Blog (@z_jalolov)",
+        subtitle: "Dasturlash, IT faoliyat va shaxsiy rivojlanish",
+        url: "https://instagram.com/z_jalolov",
+        icon: "fa-brands fa-instagram"
+      }
+    ];
+
+    // Havolalarni HTML ichiga render qilish
+    function renderLinks() {
+      const container = document.getElementById('links-container');
+      if (!container) return;
+
+      container.innerHTML = linksData.map(link => {
+        const badgeHtml = link.badge 
+          ? `<span class="px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded-md bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">${link.badge}</span>` 
+          : '';
+
+        const subtitleHtml = link.subtitle 
+          ? `<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">${link.subtitle}</p>` 
+          : '';
+
+        return `
+          <a 
+            href="${link.url}" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="group relative flex items-center justify-between w-full p-4 rounded-2xl bg-white dark:bg-slate-900/90 backdrop-blur-sm border border-slate-200/90 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-indigo-500/60 dark:hover:border-indigo-500/60 hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200 text-slate-800 dark:text-slate-100"
+          >
+            <!-- Chap Ikonka -->
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-200 shrink-0 shadow-sm">
+              <i class="${link.icon} text-xl"></i>
+            </div>
+
+            <!-- Markaziy Matn -->
+            <div class="flex-1 px-3.5 text-left min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="font-semibold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  ${link.title}
+                </span>
+                ${badgeHtml}
+              </div>
+              ${subtitleHtml}
+            </div>
+
+            <!-- O'ng Tomondagi Yo'naltiruvchi Ikonka -->
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all duration-200 shrink-0">
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    // Yilni footerga avtomatik kiritish
+    function initFooterYear() {
+      const yearEl = document.getElementById('current-year');
+      if (yearEl) {
+        yearEl.textContent = new Date().getFullYear();
+      }
+    }
+
+    // Ishga tushirish
+    document.addEventListener('DOMContentLoaded', () => {
+      renderLinks();
+      initFooterYear();
+    });
+  </script>
+</body>
+</html>

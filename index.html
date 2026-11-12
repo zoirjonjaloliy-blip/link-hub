@@ -1,25 +1,45 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jalolov Zoirjon | 1C Dasturchi, AI & Loyiha Menejeri</title>
+  <title>Jalolov Zoirjon | Biznes Avtomatlashtirish (PM & Dev)</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'media',
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
             sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+            mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
           },
           colors: {
-            brand: {
-              yellow: '#FFCC00', // 1C brendiga mos
-              red: '#E53935',
+            cyber: {
+              bg: '#05080E',
+              card: '#0B111D',
+              border: '#162338',
+            }
+          },
+          animation: {
+            'glow-pulse': 'glow 4s ease-in-out infinite alternate',
+            'float': 'float 3.5s ease-in-out infinite',
+            'shimmer': 'shimmer 2.5s infinite',
+          },
+          keyframes: {
+            glow: {
+              '0%': { opacity: '0.25', transform: 'scale(0.96)' },
+              '100%': { opacity: '0.6', transform: 'scale(1.05)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+            shimmer: {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(200%)' },
             }
           }
         }
@@ -27,388 +47,1092 @@
     }
   </script>
 
-  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- FontAwesome 6 CDN -->
+  <!-- FontAwesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      -webkit-tap-highlight-color: transparent;
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* QIZIL LAZER SKANER CHIZIG'I */
+    #red-scanner-line {
+      position: fixed; left: 0; right: 0; top: -10px; height: 3px;
+      background: #EF4444;
+      box-shadow: 0 0 10px 2px #EF4444, 0 0 25px 6px rgba(239,68,68,0.7), 0 0 45px 12px rgba(220,38,38,0.4);
+      z-index: 9999; pointer-events: none; opacity: 0;
     }
-    .font-mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    
-    /* Zamonaviy dasturchi to'r foni */
-    .dev-grid-pattern {
-      background-size: 30px 30px;
-      background-image: 
-        linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
-    }
-    @media (prefers-color-scheme: dark) {
-      .dev-grid-pattern {
-        background-image: 
-          linear-gradient(to right, rgba(99, 102, 241, 0.08) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
-      }
+    .laser-scanning { animation: scanDownwards 2.6s linear forwards; }
+    @keyframes scanDownwards {
+      0% { top: -10px; opacity: 1; }
+      90% { top: 100vh; opacity: 1; }
+      100% { top: 105vh; opacity: 0; }
     }
 
-    /* Nusxa olindi xabarnomasi (Toast) */
-    #toast {
-      visibility: hidden;
-      opacity: 0;
-      transition: visibility 0s 0.2s, opacity 0.2s linear;
+    /* 0.8s qadam bilan ketma-ket ochilish */
+    .stagger-node {
+      opacity: 0; transform: translateY(28px); filter: blur(6px);
+      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1), filter 0.75s ease;
+      pointer-events: none;
     }
-    #toast.show {
-      visibility: visible;
-      opacity: 1;
-      transition: opacity 0.2s linear;
+    .stagger-node.revealed { opacity: 1; transform: translateY(0); filter: blur(0); pointer-events: auto; }
+
+    .glass-card { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+      will-change: transform;
+    }
+
+    .cyber-modal { opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; }
+    .cyber-modal.active { opacity: 1; visibility: visible; }
+
+    #toast { transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    /* Shimmer nurlanish effekti */
+    .btn-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shimmer::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(60deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+      transform: rotate(25deg);
+      animation: shimmer 3s infinite;
+      pointer-events: none;
     }
   </style>
 </head>
-<body class="min-h-screen bg-slate-50 dark:bg-[#0A0D14] text-slate-800 dark:text-slate-100 dev-grid-pattern transition-colors duration-300 flex flex-col justify-between items-center p-4 sm:p-6 antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+<body class="min-h-screen bg-cyber-bg text-slate-100 transition-colors duration-300 flex flex-col justify-between items-center p-3 sm:p-6 antialiased relative selection:bg-emerald-500 selection:text-white overflow-x-hidden">
 
-  <!-- Yuqori Neon Nurlanish Effekti -->
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[550px] h-[280px] bg-gradient-to-b from-indigo-500/15 via-sky-500/10 to-transparent blur-3xl pointer-events-none -z-10"></div>
+  <!-- QIZIL LAZER SKANER CHIZIG'I (Sahifa ochilganda tushadi) -->
+  <div id="red-scanner-line" class="laser-scanning"></div>
 
-  <!-- Asosiy Konteyner -->
-  <main class="w-full max-w-lg mx-auto flex flex-col items-center flex-grow pt-8 sm:pt-10 pb-8">
-    
-    <!-- Profil Bo'limi -->
-    <header class="flex flex-col items-center text-center w-full mb-6">
+  <!-- YASHIL 010101 MATRIX FON (CANVAS) -->
+  <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none -z-20 opacity-25 dark:opacity-30"></canvas>
+  <div class="fixed -top-32 left-1/2 -translate-x-1/2 w-[650px] h-[360px] bg-gradient-to-b from-indigo-600/20 via-emerald-500/10 to-transparent blur-3xl pointer-events-none -z-10 animate-glow-pulse"></div>
+
+  <!-- YUQORI ASBOBLAR PANELI (Matrix ranglari, QR, Terminal, Theme) -->
+  <div id="step-0" class="stagger-node w-full max-w-md flex flex-col gap-2 pt-2 pb-2">
+    <div class="flex justify-between items-center text-xs font-mono text-slate-400">
       
-      <!-- Dasturchi Avatar Ikonkasi -->
-      <div class="relative group mb-4">
-        <div class="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-red-500 via-indigo-600 to-cyan-400 opacity-75 blur-md group-hover:opacity-100 transition duration-300"></div>
-        <div class="relative w-28 h-28 rounded-3xl bg-slate-900 border-2 border-indigo-500/40 flex items-center justify-center text-white shadow-2xl overflow-hidden">
-          <div class="w-full h-full bg-gradient-to-b from-slate-800 to-[#0A0D14] flex flex-col items-center justify-center relative">
-            <!-- Dasturchi/Muhandis ikonkasi -->
-            <i class="fa-solid fa-user-gear text-4xl text-indigo-400 group-hover:scale-110 transition-transform duration-300"></i>
-            <span class="text-[9px] font-mono text-cyan-400 mt-1 font-bold tracking-wider">DEV & PM</span>
+      <!-- Farg'ona Soat & Sana Mini Bloki -->
+      <div class="flex items-center gap-1.5 bg-cyber-card/80 border border-cyber-border px-2.5 py-1.5 rounded-xl shadow-sm min-w-0">
+        <i class="fa-regular fa-clock text-emerald-400 text-[11px] shrink-0"></i>
+        <div class="flex flex-col min-w-0">
+          <div class="flex items-center gap-1 text-[10px]">
+            <span class="text-slate-500">Farg'ona:</span>
+            <span id="fargona-time" class="text-emerald-400 font-bold">--:--:--</span>
           </div>
+          <span id="fargona-date" class="text-[9px] text-slate-400 truncate">-- --- ----</span>
         </div>
+      </div>
+
+      <!-- Asboblar -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <!-- Passacaglia Musiqasi Tugmasi -->
+        <button id="music-toggle" onclick="togglePassacagliaMusic()" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-amber-400/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Passacaglia Musiqasini Tinglash">
+          <i id="music-icon" class="fa-solid fa-music text-amber-400"></i>
+        </button>
+        <button id="sound-toggle" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-emerald-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Ovoz">
+          <i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400"></i>
+        </button>
+        <button id="matrix-color-btn" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyan-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Matrix Rangi">
+          <i class="fa-solid fa-palette text-cyan-400"></i>
+        </button>
+        <button onclick="openQrModal()" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyan-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="QR Kod">
+          <i class="fa-solid fa-qrcode text-cyan-400"></i>
+        </button>
+        <button onclick="toggleTerminal()" class="px-2 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-indigo-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center gap-1 transition-all text-[11px]" title="Terminal">
+          <i class="fa-solid fa-terminal text-indigo-400 text-[10px]"></i>
+          <span class="hidden sm:inline font-bold">>_</span>
+        </button>
+        <button id="theme-toggle" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-emerald-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Mavzu">
+          <i id="theme-icon" class="fa-solid fa-moon text-emerald-400"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Passacaglia Fon Audio Teglari -->
+    <audio id="bg-music" loop preload="none">
+      <source src="passacaglia.mp3" type="audio/mpeg">
+      <source src="https://ia800301.us.archive.org/15/items/HalvorsenPassacagliaForViolinAndCello/HalvorsenPassacagliaForViolinAndCello.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Matrix Rang Tanlash Paneli -->
+    <div id="matrix-color-panel" class="hidden flex items-center justify-center gap-2 p-2 rounded-xl bg-cyber-card/90 border border-cyber-border text-xs font-mono">
+      <span class="text-slate-500 text-[10px]">MATRIX RANGI:</span>
+      <button onclick="setMatrixColor('#10B981','Yashil')" class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/50 hover:scale-110 active:scale-95 transition-all" title="Yashil">
+        <span class="text-emerald-400 font-bold text-[11px]">01</span>
+      </button>
+      <button onclick="setMatrixColor('#06B6D4','Moviy')" class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-500/50 hover:scale-110 active:scale-95 transition-all" title="Moviy">
+        <span class="text-cyan-400 font-bold text-[11px]">01</span>
+      </button>
+      <button onclick="setMatrixColor('#F59E0B','Oltin')" class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/50 hover:scale-110 active:scale-95 transition-all" title="1C Oltin">
+        <span class="text-amber-400 font-bold text-[11px]">01</span>
+      </button>
+      <button onclick="setMatrixColor('#EF4444','Qizil')" class="w-7 h-7 rounded-lg bg-rose-500/20 border border-rose-500/50 hover:scale-110 active:scale-95 transition-all" title="Qizil">
+        <span class="text-rose-400 font-bold text-[11px]">01</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 1-BAND: JONLI STATUS BO'LIMI (IXCHAM, 2 BAROBAR KICHIK KIBER-PANEL) -->
+  <div id="live-status-widget" class="stagger-node w-full max-w-md mb-3 font-mono">
+    <div id="live-status-card" class="px-3 py-1.5 rounded-xl bg-cyber-card/95 border transition-all duration-300 flex items-center justify-between gap-2 shadow-sm">
+      
+      <!-- Chap tomon: Nuqta + Katta harflardagi Badge + Holat matni -->
+      <div class="flex items-center gap-2 min-w-0 flex-1">
+        <span id="live-status-dot" class="w-2 h-2 rounded-full shrink-0"></span>
+        <div class="flex items-center gap-1.5 flex-wrap min-w-0">
+          <span id="live-status-badge" class="px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider shrink-0"></span>
+          <span id="live-status-desc-short" class="text-[11px] text-slate-300 font-sans font-medium whitespace-nowrap"></span>
+        </div>
+      </div>
+
+      <!-- O'ng tomon: Ovozli tinglash + Tezkor aloqa -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button 
+          type="button" 
+          onclick="speakRobotGreeting(true)" 
+          class="w-6 h-6 rounded-md bg-cyber-bg border border-cyber-border hover:border-emerald-500/60 text-slate-400 hover:text-emerald-400 flex items-center justify-center transition-all text-[10px] active:scale-95" 
+          title="Robot ovozida eshitish"
+        >
+          <i class="fa-solid fa-volume-high text-[10px]"></i>
+        </button>
+
+        <a 
+          href="https://t.me/Jalolov_IST" 
+          target="_blank" 
+          id="live-status-action" 
+          class="py-1 px-2 rounded-md text-[9.5px] font-bold transition-transform hover:scale-105 active:scale-95 flex items-center gap-1 shadow-sm shrink-0 font-mono"
+        >
+          <i class="fa-brands fa-telegram text-[10px]"></i>
+          <span>Bog'lanish</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="w-full max-w-md mx-auto flex flex-col items-center flex-grow">
+
+    <!-- BOSH KARTA -->
+    <div id="main-profile-card" class="tilt-card w-full bg-cyber-card/90 glass-card rounded-3xl border border-cyber-border p-5 sm:p-6 shadow-2xl relative overflow-hidden mb-4">
+      
+      <div class="flex items-center justify-between border-b border-cyber-border/70 pb-3 mb-4 text-[11px] font-mono text-slate-500">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+        </div>
+        <div class="text-slate-400 flex items-center gap-1">
+          <i class="fa-solid fa-terminal text-emerald-400 animate-pulse"></i>
+          <span>~/jalolov-systems</span>
+        </div>
+        <span class="text-[10px] text-emerald-400 font-bold">1C & AI</span>
+      </div>
+
+      <div class="flex flex-col items-center text-center">
         
-        <!-- Tajriba Nishoni -->
-        <div class="absolute -bottom-2 -right-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 border-2 border-white dark:border-[#0A0D14] text-[11px] font-bold text-white shadow-md flex items-center gap-1 font-mono">
-          <i class="fa-solid fa-bolt text-yellow-300 text-[10px]"></i> 5+ Yil
+        <!-- 1-BOSQICH: Avatar & Ism Familiya -->
+        <div id="step-1" class="stagger-node flex flex-col items-center">
+          <div class="relative group mb-3.5 animate-float">
+            <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 via-indigo-500 to-cyan-500 opacity-75 blur group-hover:opacity-100 transition duration-300"></div>
+            <div class="relative w-24 h-24 rounded-2xl bg-[#070D18] border border-emerald-400/50 flex flex-col items-center justify-center text-white shadow-xl">
+              <i class="fa-solid fa-user-tie text-3xl text-emerald-400"></i>
+              <span class="text-[10px] font-mono text-slate-300 mt-1 font-semibold">1C ARCHITECT</span>
+            </div>
+            <div class="absolute -bottom-2 -right-1 px-2 py-0.5 rounded-full bg-emerald-600 border border-emerald-400 text-[10px] font-bold text-white font-mono shadow-sm">5+ YIL</div>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center justify-center gap-1.5">
+            Jalolov Zoirjon
+            <i class="fa-solid fa-circle-check text-emerald-400 text-lg" title="Tasdiqlangan"></i>
+          </h1>
+          <p class="text-xs font-mono text-emerald-400 mt-1 mb-2">
+            1C Dasturchi <span class="text-slate-600">•</span> AI Menejer <span class="text-slate-600">•</span> PM
+          </p>
+        </div>
+
+        <!-- 2-BOSQICH: Bio Matni -->
+        <div id="step-2" class="stagger-node w-full mt-2">
+          <p class="text-xs text-slate-300 leading-relaxed font-normal bg-cyber-bg/75 px-3.5 py-2.5 rounded-xl border border-cyber-border/80 shadow-inner">
+            Biznes jarayonlarini avtomatlashtirish bo'yicha mutaxassis <span class="text-emerald-400 font-semibold">(Project Manager & Developer)</span>.
+          </p>
+        </div>
+
+        <!-- 3-BOSQICH: Bento Statistika -->
+        <div id="step-3" class="stagger-node grid grid-cols-3 gap-2 w-full mt-4 pt-3 border-t border-cyber-border/60 font-mono">
+          <div class="p-2 rounded-xl bg-cyber-bg/70 border border-cyber-border/80 hover:border-amber-400/50 transition-all">
+            <div class="text-sm font-bold text-amber-400">200+</div>
+            <div class="text-[9px] text-slate-400 uppercase">Mijozlar</div>
+          </div>
+          <div class="p-2 rounded-xl bg-cyber-bg/70 border border-cyber-border/80 hover:border-emerald-400/50 transition-all">
+            <div class="text-sm font-bold text-emerald-400">5+ Yil</div>
+            <div class="text-[9px] text-slate-400 uppercase">Tajriba</div>
+          </div>
+          <div class="p-2 rounded-xl bg-cyber-bg/70 border border-cyber-border/80 hover:border-cyan-400/50 transition-all">
+            <div class="text-sm font-bold text-cyan-400">1C • AI</div>
+            <div class="text-[9px] text-slate-400 uppercase">Integrator</div>
+          </div>
+        </div>
+
+        <!-- 4-BAND: KONSULTATSIYA OLISH - KO'ZGA YAQQOL TASHLANUVCHI KATTA ASOSIY TUGMA (HERO CTA) -->
+        <div class="w-full mt-5 flex flex-col gap-2.5">
+          <button 
+            type="button"
+            onclick="openOrderModal()" 
+            class="btn-shimmer w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white font-mono text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2.5 shadow-xl shadow-indigo-600/30 hover:scale-[1.02] active:scale-95 transition-all border border-indigo-400/40"
+          >
+            <i class="fa-solid fa-rocket text-base text-yellow-300 animate-pulse"></i>
+            <span>BEPUL KONSULTATSIYA & BUYURTMA</span>
+          </button>
+
+          <!-- Kontaktni Saqlash Tugmasi -->
+          <button 
+            type="button"
+            onclick="downloadVCard()" 
+            class="w-full py-2.5 px-4 rounded-xl bg-cyber-bg/90 hover:bg-cyber-bg border border-cyber-border hover:border-emerald-500/50 text-slate-300 hover:text-white font-mono text-[11px] font-bold flex items-center justify-center gap-2 transition-all active:scale-95"
+          >
+            <i class="fa-solid fa-address-card text-emerald-400 text-xs"></i>
+            <span>Kontaktni Telefonga Saqlash (.vcf)</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- REJIMLAR (IT & SHAXSIY) -->
+    <div id="step-4" class="stagger-node w-full flex items-center p-1 rounded-2xl bg-cyber-card/90 border border-cyber-border mb-3.5 text-xs font-mono shadow-md">
+      <button onclick="switchMode('work')" id="btn-mode-work" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-semibold flex items-center justify-center gap-1.5 transition-all duration-300 shadow active:scale-95">
+        <i class="fa-solid fa-briefcase text-xs"></i>
+        <span>IT & Biznes Tizimlari</span>
+      </button>
+      <button onclick="switchMode('personal')" id="btn-mode-personal" class="flex-1 py-2 px-3 rounded-xl text-slate-400 hover:text-white font-medium flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">
+        <i class="fa-solid fa-user text-xs"></i>
+        <span>Shaxsiy Aloqa</span>
+      </button>
+    </div>
+
+    <!-- TELEFON -->
+    <div id="step-5" class="stagger-node w-full mb-3.5 font-mono">
+      <div id="phone-container"></div>
+    </div>
+
+    <!-- XIZMATLAR (FAQAT IT REJIMIDA) -->
+    <div id="step-6" class="stagger-node w-full mb-3.5 transition-all duration-300">
+      <div id="services-block" class="p-3.5 rounded-2xl bg-cyber-card/80 border border-cyber-border shadow-sm">
+        <div class="text-[11px] font-mono text-emerald-400 flex items-center justify-between mb-2.5 pb-1.5 border-b border-cyber-border/60">
+          <span class="flex items-center gap-1.5 font-bold uppercase tracking-wider">
+            <i class="fa-solid fa-layer-group text-indigo-400"></i>
+            Yo'nalishlar & Yechimlar
+          </span>
+          <span class="text-[10px] text-slate-400">Professional</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="tilt-card group flex items-center gap-2 p-2 rounded-xl bg-cyber-bg/60 border border-cyber-border/70 hover:border-emerald-500/50 hover:bg-cyber-card transition-all">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all"><i class="fa-solid fa-chart-pie text-xs"></i></div>
+            <div><div class="font-bold text-slate-200 text-[11px]">ERP</div><div class="text-[9px] text-slate-400">Korxona Boshqaruvi</div></div>
+          </div>
+          <div class="tilt-card group flex items-center gap-2 p-2 rounded-xl bg-cyber-bg/60 border border-cyber-border/70 hover:border-emerald-500/50 hover:bg-cyber-card transition-all">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all"><i class="fa-solid fa-users-gear text-xs"></i></div>
+            <div><div class="font-bold text-slate-200 text-[11px]">HR Tizimlari</div><div class="text-[9px] text-slate-400">Xodimlar & Oylik</div></div>
+          </div>
+          <div class="tilt-card group flex items-center gap-2 p-2 rounded-xl bg-cyber-bg/60 border border-cyber-border/70 hover:border-blue-500/50 hover:bg-cyber-card transition-all">
+            <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all"><i class="fa-solid fa-handshake-angle text-xs"></i></div>
+            <div><div class="font-bold text-slate-200 text-[11px]">CRM</div><div class="text-[9px] text-slate-400">Mijozlar Bazasi</div></div>
+          </div>
+          <div class="tilt-card group flex items-center gap-2 p-2 rounded-xl bg-cyber-bg/60 border border-cyber-border/70 hover:border-amber-500/50 hover:bg-cyber-card transition-all">
+            <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition-all"><i class="fa-solid fa-file-invoice-dollar text-xs"></i></div>
+            <div><div class="font-bold text-slate-200 text-[11px]">Soliq & 1C</div><div class="text-[9px] text-slate-400">Didox / E-Faktura</div></div>
+          </div>
+          <div class="tilt-card group flex items-center gap-2 p-2 rounded-xl bg-cyber-bg/60 border border-cyber-border/70 hover:border-sky-500/50 hover:bg-cyber-card transition-all">
+            <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all"><i class="fa-brands fa-telegram text-xs"></i></div>
+            <div><div class="font-bold text-slate-200 text-[11px]">Telegram Bot</div><div class="text-[9px] text-slate-400">1C & AI Boshqaruv</div></div>
+          </div>
+          <div class="tilt-card group flex items-center gap-2 p-2 rounded-xl bg-cyber-bg/60 border border-cyber-border/70 hover:border-purple-500/50 hover:bg-cyber-card transition-all">
+            <div class="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all"><i class="fa-solid fa-expand text-xs"></i></div>
+            <div><div class="font-bold text-slate-200 text-[11px]">Face ID</div><div class="text-[9px] text-slate-400">Biometrik Nazorat</div></div>
+          </div>
+          <div class="tilt-card group col-span-2 flex items-center gap-2 p-2 rounded-xl bg-cyber-bg/60 border border-cyber-border/70 hover:border-rose-500/50 hover:bg-cyber-card transition-all">
+            <div class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all"><i class="fa-solid fa-mobile-screen-button text-xs"></i></div>
+            <div><div class="font-bold text-slate-200 text-[11px]">Web & Mobil Ilova</div><div class="text-[9px] text-slate-400">1C bilan to'liq sinxronlashgan ilovalar</div></div>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Ism & Tasdiqlanganlik -->
-      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center justify-center gap-2">
-        Jalolov Zoirjon
-        <span class="inline-flex items-center justify-center text-blue-500" title="Tasdiqlangan Profil">
-          <i class="fa-solid fa-circle-check text-xl"></i>
-        </span>
-      </h1>
-
-      <!-- Asosiy Mutaxassisliklar (Badges) -->
-      <div class="flex items-center gap-2 mt-2 mb-3.5 flex-wrap justify-center">
-        <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
-          <i class="fa-solid fa-database mr-1"></i> 1C Dasturchi
-        </span>
-        <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
-          <i class="fa-solid fa-brain mr-1"></i> AI Menejer
-        </span>
-        <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-          <i class="fa-solid fa-list-check mr-1"></i> Loyiha Menejeri (PM)
-        </span>
-      </div>
-
-      <!-- Bio / Tavsif -->
-      <p class="text-sm text-slate-600 dark:text-slate-300 max-w-md leading-relaxed px-2 font-normal">
-        5+ yillik tajribaga ega 1C tizimlari va Sun'iy Intellekt (AI) integratori, IT loyihalar boshqaruvchisi. Korxona biznes jarayonlarini to'liq avtomatlashtirish va raqamli boshqaruv mutaxassisi.
-      </p>
-
-      <!-- Tezkor Qo'ng'iroq / Telefon Kartalari -->
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-5">
-        <a 
-          href="tel:+998912045256" 
-          class="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 shadow-sm hover:border-emerald-500/60 transition-all group"
-        >
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
-              <i class="fa-solid fa-phone"></i>
-            </div>
-            <div class="text-left">
-              <span class="text-[10px] text-slate-400 block font-mono">Asosiy aloqa</span>
-              <span class="text-xs font-semibold font-mono text-slate-800 dark:text-slate-200 group-hover:text-emerald-500 transition-colors">+998 91 204 52 56</span>
-            </div>
-          </div>
-          <button 
-            type="button"
-            onclick="event.preventDefault(); copyToClipboard('+998912045256', 'Telefon raqam nusxalandi!')" 
-            class="text-slate-400 hover:text-emerald-500 p-1.5 transition-colors" 
-            title="Nusxalash"
-          >
-            <i class="fa-regular fa-copy text-sm"></i>
-          </button>
-        </a>
-
-        <a 
-          href="tel:+998995160021" 
-          class="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 shadow-sm hover:border-emerald-500/60 transition-all group"
-        >
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
-              <i class="fa-solid fa-phone-volume"></i>
-            </div>
-            <div class="text-left">
-              <span class="text-[10px] text-slate-400 block font-mono">Qo'shimcha aloqa</span>
-              <span class="text-xs font-semibold font-mono text-slate-800 dark:text-slate-200 group-hover:text-emerald-500 transition-colors">+998 99 516 00 21</span>
-            </div>
-          </div>
-          <button 
-            type="button"
-            onclick="event.preventDefault(); copyToClipboard('+998995160021', 'Telefon raqam nusxalandi!')" 
-            class="text-slate-400 hover:text-emerald-500 p-1.5 transition-colors" 
-            title="Nusxalash"
-          >
-            <i class="fa-regular fa-copy text-sm"></i>
-          </button>
-        </a>
-      </div>
-
-      <!-- Texnik Ko'nikmalar (Tech Chips) -->
-      <div class="flex items-center justify-center gap-1.5 flex-wrap mt-4 text-[11px] font-mono text-slate-600 dark:text-slate-400">
-        <span class="px-2 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300/40 dark:border-slate-700/50">1C:Korxona 8.3</span>
-        <span class="px-2 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300/40 dark:border-slate-700/50">AI & LLM Solutions</span>
-        <span class="px-2 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300/40 dark:border-slate-700/50">ERP Avtomatlashtirish</span>
-        <span class="px-2 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300/40 dark:border-slate-700/50">Loyiha Boshqaruvi (PM)</span>
-        <span class="px-2 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300/40 dark:border-slate-700/50">Biznes Tahlil</span>
-      </div>
-
-    </header>
-
-    <!-- Havolalar Ro'yxati (Dinamik render qilinadi) -->
-    <section class="w-full flex flex-col gap-3.5 mb-6">
-      
-      <!-- Bo'lim nomi -->
-      <div class="flex items-center gap-2 px-1 text-xs font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-        <i class="fa-solid fa-terminal text-indigo-500"></i>
-        <span>Aloqa & Loyihalar</span>
-        <div class="flex-grow h-px bg-slate-200 dark:bg-slate-800"></div>
-      </div>
-
-      <div id="links-container" class="flex flex-col gap-3">
-        <!-- JavaScript orqali to'ldiriladi -->
-      </div>
-    </section>
+    <!-- HAVOLALAR -->
+    <div id="step-7" class="stagger-node w-full mb-5">
+      <div id="links-container" class="w-full flex flex-col gap-2.5"></div>
+    </div>
 
   </main>
 
-  <!-- Pastki Qism: Ijtimoiy Tarmoqlar & Footer -->
-  <footer class="w-full max-w-lg mx-auto flex flex-col items-center gap-4 pb-4">
-    
-    <!-- Dumaloq Tarmoq Ikonkalari Qatori -->
-    <nav class="flex items-center justify-center gap-3" aria-label="Ijtimoiy tarmoqlar">
-      <!-- Telegram Shaxsiy -->
-      <a 
-        href="https://t.me/Z_Jalolov" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        title="Telegram: @Z_Jalolov" 
-        class="w-11 h-11 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-sky-500 hover:border-sky-500/50 hover:-translate-y-1 transition-all shadow-sm"
-      >
-        <i class="fa-brands fa-telegram text-lg"></i>
-      </a>
-
-      <!-- Instagram Shaxsiy -->
-      <a 
-        href="https://instagram.com/Z_Jalolov" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        title="Instagram: @Z_Jalolov" 
-        class="w-11 h-11 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-pink-500 hover:border-pink-500/50 hover:-translate-y-1 transition-all shadow-sm"
-      >
-        <i class="fa-brands fa-instagram text-lg"></i>
-      </a>
-
-      <!-- Twitter / X -->
-      <a 
-        href="https://x.com/Z_Jalolov" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        title="X (Twitter): @Z_Jalolov" 
-        class="w-11 h-11 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 hover:-translate-y-1 transition-all shadow-sm"
-      >
-        <i class="fa-brands fa-x-twitter text-lg"></i>
-      </a>
-
-      <!-- GitHub -->
-      <a 
-        href="https://github.com/zoirjonjaloliy-blip" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        title="GitHub: zoirjonjaloliy-blip" 
-        class="w-11 h-11 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-500 hover:border-indigo-500/50 hover:-translate-y-1 transition-all shadow-sm"
-      >
-        <i class="fa-brands fa-github text-lg"></i>
-      </a>
-
-      <!-- LinkedIn -->
-      <a 
-        href="https://www.linkedin.com/in/zoirjon-jalolov-02503b449/" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        title="LinkedIn: Zoirjon Jalolov" 
-        class="w-11 h-11 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 hover:border-blue-600/50 hover:-translate-y-1 transition-all shadow-sm"
-      >
-        <i class="fa-brands fa-linkedin-in text-lg"></i>
-      </a>
-    </nav>
-
-    <!-- Mualliflik Huquqi -->
-    <p class="text-xs text-slate-400 dark:text-slate-500 font-mono tracking-wide">
-      &copy; <span id="current-year"></span> Jalolov Zoirjon. 1C & AI Systems.
-    </p>
+  <!-- FOOTER -->
+  <footer id="step-8" class="stagger-node w-full max-w-md mx-auto flex flex-col items-center gap-3 pb-3">
+    <div class="flex items-center justify-center gap-3">
+      <a href="https://t.me/Jalolov_IST" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-cyber-card border border-cyber-border flex items-center justify-center text-slate-400 hover:text-sky-400 hover:border-sky-500/50 hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all" title="Telegram"><i class="fa-brands fa-telegram text-base"></i></a>
+      <a href="https://instagram.com/Jalolov_Systems" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-cyber-card border border-cyber-border flex items-center justify-center text-slate-400 hover:text-pink-400 hover:border-pink-500/50 hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all" title="Instagram"><i class="fa-brands fa-instagram text-base"></i></a>
+      <a href="mailto:loadingjalolov@gmail.com" class="w-10 h-10 rounded-xl bg-cyber-card border border-cyber-border flex items-center justify-center text-slate-400 hover:text-red-400 hover:border-red-500/50 hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all" title="Gmail: loadingjalolov@gmail.com"><i class="fa-solid fa-envelope text-base"></i></a>
+      <a href="https://x.com/Z_Jalolov" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-cyber-card border border-cyber-border flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-500 hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all" title="X (Twitter)"><i class="fa-brands fa-x-twitter text-base"></i></a>
+      <a href="https://github.com/zoirjonjaloliy-blip" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-cyber-card border border-cyber-border flex items-center justify-center text-slate-400 hover:text-emerald-400 hover:border-emerald-500/50 hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all" title="GitHub"><i class="fa-brands fa-github text-base"></i></a>
+      <a href="https://www.linkedin.com/in/zoirjon-jalolov-02503b449/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-cyber-card border border-cyber-border flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-500/50 hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all" title="LinkedIn"><i class="fa-brands fa-linkedin-in text-base"></i></a>
+    </div>
+    <p class="text-[11px] font-mono text-slate-500 text-center">&copy; <span id="current-year"></span> Jalolov Zoirjon • Business Automation Specialist</p>
   </footer>
 
-  <!-- Toast (Nusxalash xabarnomasi) -->
-  <div id="toast" class="fixed bottom-6 z-50 px-4 py-2 rounded-xl bg-slate-900/90 dark:bg-white/95 text-white dark:text-slate-900 font-mono text-xs shadow-xl backdrop-blur border border-slate-700/50 flex items-center gap-2">
-    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+  <!-- 5-BAND: BUYURTMA MODALI (HAM GMAILGA, HAM TELEGRAMGA BORADI) -->
+  <div id="order-modal" class="cyber-modal fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-sm bg-cyber-card border border-indigo-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl">
+      <button type="button" onclick="closeOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+      <!-- FORMA BLOKI -->
+      <div id="order-form-container">
+        <div class="flex items-center gap-2.5 mb-4">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl"><i class="fa-solid fa-rocket"></i></div>
+          <div>
+            <h3 class="text-sm font-bold text-white font-mono">Konsultatsiya & Buyurtma</h3>
+            <p class="text-[10px] text-slate-400 font-mono">Telegram (@Jalolov_IST) & Gmail ga boradi</p>
+          </div>
+        </div>
+
+        <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-3">
+          <!-- Ism -->
+          <div>
+            <label class="text-[10px] text-slate-400 font-mono block mb-1">Ismingiz *</label>
+            <input id="order-name" type="text" required placeholder="Masalan: Alisher" class="w-full px-3 py-2.5 rounded-xl bg-cyber-bg border border-cyber-border text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 font-mono" />
+          </div>
+
+          <!-- Telefon -->
+          <div>
+            <label class="text-[10px] text-slate-400 font-mono block mb-1">Telefon raqamingiz *</label>
+            <input id="order-phone" type="tel" required placeholder="+998 90 123 45 67" class="w-full px-3 py-2.5 rounded-xl bg-cyber-bg border border-cyber-border text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 font-mono" />
+          </div>
+
+          <!-- Xizmat yo'nalishi -->
+          <div>
+            <label class="text-[10px] text-slate-400 font-mono block mb-1">Kerakli yo'nalish *</label>
+            <select id="order-service" required class="w-full px-3 py-2.5 rounded-xl bg-cyber-bg border border-cyber-border text-sm text-white focus:outline-none focus:border-indigo-500/50 font-mono appearance-none">
+              <option value="" class="bg-cyber-bg">Tanlang...</option>
+              <option value="1C:ERP — Korxona Boshqaruvi" class="bg-cyber-bg">1C:ERP — Korxona Boshqaruvi</option>
+              <option value="1C:HR — Xodimlar va Oylik" class="bg-cyber-bg">1C:HR — Xodimlar va Oylik</option>
+              <option value="CRM — Mijozlar Tizimi" class="bg-cyber-bg">CRM — Mijozlar Tizimi</option>
+              <option value="Soliq & Didox Integratsiyasi" class="bg-cyber-bg">Soliq & Didox Integratsiyasi</option>
+              <option value="Telegram Bot (1C & AI)" class="bg-cyber-bg">Telegram Bot (1C & AI)</option>
+              <option value="Face ID — Biometrik Nazorat" class="bg-cyber-bg">Face ID — Biometrik Nazorat</option>
+              <option value="Web & Mobil Ilova" class="bg-cyber-bg">Web & Mobil Ilova</option>
+              <option value="AI Integratsiya / Konsultatsiya" class="bg-cyber-bg">AI Integratsiya / Konsultatsiya</option>
+              <option value="Boshqa Loyiha" class="bg-cyber-bg">Boshqa Loyiha</option>
+            </select>
+          </div>
+
+          <!-- Izoh -->
+          <div>
+            <label class="text-[10px] text-slate-400 font-mono block mb-1">Qo'shimcha izoh (ixtiyoriy)</label>
+            <textarea id="order-note" rows="2" placeholder="Loyiha haqida qisqacha..." class="w-full px-3 py-2 rounded-xl bg-cyber-bg border border-cyber-border text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 font-mono resize-none"></textarea>
+          </div>
+
+          <!-- Yuborish Tugmasi -->
+          <button id="order-submit-btn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-indigo-500/20 active:scale-95 transition-all">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+            <span>Yuborish (Telegram & Gmail)</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- MUVAFFAQIYATLI NATIJA BLOKI (KAFOLATLI TELEGRAM VA GMAIL TUGMALARI) -->
+      <div id="order-success-container" class="hidden flex flex-col items-center text-center py-2">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl mb-3 shadow-[0_0_20px_rgba(16,185,129,0.3)] animate-pulse">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="text-base font-bold text-white font-mono">So'rov Qabul Qilindi!</h3>
+        <p class="text-xs text-slate-300 mt-1 mb-4 leading-relaxed font-sans">
+          Ma'lumotlar muvaffaqiyatli tayyorlandi. Agar Telegram avtomatik ochilmagan bo'lsa, quyidagi tugmani bosing:
+        </p>
+
+        <a id="order-tg-btn" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 active:scale-95 transition-all mb-2.5">
+          <i class="fa-brands fa-telegram text-base"></i>
+          <span>Telegramda Yuborish (@Jalolov_IST)</span>
+        </a>
+
+        <a id="order-gmail-btn" href="#" class="w-full py-2.5 px-3 rounded-xl bg-cyber-bg border border-cyber-border hover:border-red-500/50 text-slate-300 hover:text-white font-mono text-[11px] flex items-center justify-center gap-2 transition-all mb-3">
+          <i class="fa-solid fa-envelope text-red-400"></i>
+          <span>Gmail orqali yuborish (qo'shimcha)</span>
+        </a>
+
+        <button type="button" onclick="resetOrderModal()" class="py-1 px-4 rounded-lg bg-cyber-bg border border-cyber-border text-xs font-mono text-slate-400 hover:text-white transition-colors">
+          Yopish
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- QR KOD MODAL -->
+  <div id="qr-modal" class="cyber-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="relative w-full max-w-xs bg-cyber-card border border-emerald-500/50 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center">
+      <button type="button" onclick="closeQrModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-qrcode"></i></div>
+      <h3 class="text-base font-bold text-white font-mono">Ulanish uchun QR-Kod</h3>
+      <p class="text-[11px] text-slate-400 mt-1 mb-4">Kamerangiz bilan skaner qiling</p>
+      <div class="p-3 bg-white rounded-2xl shadow-inner border border-emerald-400/40">
+        <img src="https://quickchart.io/qr?text=https://zoirjonjaloliy-blip.github.io/link-hub/&size=200&dark=05080E" alt="QR Kod" class="w-44 h-44 object-contain rounded-lg" />
+      </div>
+      <p class="text-[10px] font-mono text-emerald-400 mt-4">zoirjonjaloliy-blip.github.io/link-hub</p>
+    </div>
+  </div>
+
+  <!-- TERMINAL MODAL -->
+  <div id="terminal-modal" class="cyber-modal fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md">
+    <div class="w-full max-w-lg bg-[#070B13] border border-cyan-500/50 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden font-mono text-xs flex flex-col h-[400px]">
+      <div class="flex items-center justify-between bg-[#0B111D] px-4 py-2.5 border-b border-cyber-border">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-rose-500 inline-block cursor-pointer" onclick="toggleTerminal()"></span>
+          <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+          <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+          <span class="text-slate-400 text-[11px] ml-2">jalolov@systems: ~</span>
+        </div>
+        <button type="button" onclick="toggleTerminal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="terminal-body" class="flex-1 p-4 overflow-y-auto space-y-2 text-slate-300">
+        <p class="text-emerald-400 font-bold">Jalolov Systems v2.5 Interactive Shell [Online]</p>
+        <p class="text-slate-400 text-[11px]">Buyruqlarni ko'rish uchun <span class="text-cyan-400 font-bold">'help'</span> deb yozing.</p>
+      </div>
+      <form onsubmit="handleTerminalInput(event)" class="flex items-center bg-[#0B111D] px-4 py-2.5 border-t border-cyber-border">
+        <span class="text-emerald-400 font-bold mr-2">jalolov:~$</span>
+        <input id="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="help, contact, skills..." class="flex-1 bg-transparent text-cyan-300 focus:outline-none text-xs" />
+        <button type="submit" class="text-slate-400 hover:text-emerald-400 ml-2"><i class="fa-solid fa-arrow-turn-down text-xs"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-6 z-40 px-4 py-2.5 rounded-2xl bg-emerald-600 text-white font-mono text-xs shadow-2xl flex items-center gap-2 border border-emerald-400">
+    <i class="fa-solid fa-check"></i>
     <span id="toast-text">Nusxalandi!</span>
   </div>
 
-  <!-- JavaScript Kodlari -->
   <script>
-    // Havolalar ro'yxati (1C, AI, Telegramlar, Instagramlar va loyihalar)
-    const linksData = [
-      {
-        title: "Telegram: @Jalolov_IST",
-        subtitle: "1C Tizimlari, IT loyihalar va korporativ aloqa kanali",
-        url: "https://t.me/Jalolov_IST",
-        icon: "fa-brands fa-telegram",
-        badge: "Ishchi",
-        badgeColor: "bg-blue-500/10 text-blue-500 border-blue-500/20"
-      },
-      {
-        title: "Telegram: @Z_Jalolov",
-        subtitle: "Shaxsiy muloqot, konsultatsiya va to'g'ridan-to'g'ri aloqa",
-        url: "https://t.me/Z_Jalolov",
-        icon: "fa-solid fa-paper-plane",
-        badge: "Shaxsiy",
-        badgeColor: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-      },
-      {
-        title: "Instagram: @Jalolov_Systems",
-        subtitle: "Biznesni avtomatlashtirish, 1C keyslar va tizimli yechimlar",
-        url: "https://instagram.com/Jalolov_Systems",
-        icon: "fa-brands fa-instagram",
-        badge: "Ishchi",
-        badgeColor: "bg-purple-500/10 text-purple-500 border-purple-500/20"
-      },
-      {
-        title: "Instagram: @Z_Jalolov",
-        subtitle: "Shaxsiy blog, hayot tarzi va IT dasturchi kundaligi",
-        url: "https://instagram.com/Z_Jalolov",
-        icon: "fa-solid fa-camera",
-        badge: "Shaxsiy",
-        badgeColor: "bg-pink-500/10 text-pink-500 border-pink-500/20"
-      },
-      {
-        title: "LinkedIn Profili",
-        subtitle: "5+ yillik kasbiy tajriba, loyihalar va tavsiyanomalar",
-        url: "https://www.linkedin.com/in/zoirjon-jalolov-02503b449/",
-        icon: "fa-brands fa-linkedin",
-        badge: "Resume",
-        badgeColor: "bg-sky-500/10 text-sky-500 border-sky-500/20"
-      },
-      {
-        title: "GitHub Ombori",
-        subtitle: "Ochiq kodli loyihalar, skriptlar va dasturlar to'plami",
-        url: "https://github.com/zoirjonjaloliy-blip",
-        icon: "fa-brands fa-github",
-        badge: "Code",
-        badgeColor: "bg-slate-500/10 text-slate-500 border-slate-500/20"
-      },
-      {
-        title: "Twitter / X Profili (@Z_Jalolov)",
-        subtitle: "Sun'iy intellekt, IT tahlillar va zamonaviy texnologiyalar",
-        url: "https://x.com/Z_Jalolov",
-        icon: "fa-brands fa-x-twitter"
-      }
-    ];
+    let currentMode = 'work';
+    let soundEnabled = true;
+    let matrixColor = '#10B981';
 
-    // Havolalarni HTML sahifaga render qilish
-    function renderLinks() {
-      const container = document.getElementById('links-container');
-      if (!container) return;
+    // KIBER OVOZLAR (Web Audio API)
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function initAudio() { if (!audioCtx && AudioCtx) audioCtx = new AudioCtx(); }
 
-      container.innerHTML = linksData.map(link => {
-        const badgeHtml = link.badge 
-          ? `<span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded-md border ${link.badgeColor || 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20'}">${link.badge}</span>` 
-          : '';
-
-        const subtitleHtml = link.subtitle 
-          ? `<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">${link.subtitle}</p>` 
-          : '';
-
-        return `
-          <a 
-            href="${link.url}" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="group relative flex items-center justify-between w-full p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 backdrop-blur-sm border border-slate-200/90 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-indigo-500/60 dark:hover:border-indigo-500/60 hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200 text-slate-800 dark:text-slate-100"
-          >
-            <!-- Chap Ikonka -->
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-200 shrink-0 shadow-sm">
-              <i class="${link.icon} text-lg"></i>
-            </div>
-
-            <!-- Markaziy Matn -->
-            <div class="flex-1 px-3 text-left min-w-0">
-              <div class="flex items-center gap-2">
-                <span class="font-semibold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  ${link.title}
-                </span>
-                ${badgeHtml}
-              </div>
-              ${subtitleHtml}
-            </div>
-
-            <!-- O'ng Tomondagi Yo'naltiruvchi Ikonka -->
-            <div class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all duration-200 shrink-0">
-              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-            </div>
-          </a>
-        `;
-      }).join('');
+    function playCyberSound(type = 'click') {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+        if (type === 'click') {
+          osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+          gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+          osc.start(now); osc.stop(now + 0.05);
+        } else if (type === 'copy') {
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+          gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+          osc.start(now); osc.stop(now + 0.12);
+        } else if (type === 'switch') {
+          osc.type = 'sine'; osc.frequency.setValueAtTime(350, now); osc.frequency.setValueAtTime(700, now + 0.04);
+          gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+          osc.start(now); osc.stop(now + 0.09);
+        }
+      } catch (e) {}
     }
 
-    // Nusxalash funksiyasi (Clipboard)
-    function copyToClipboard(text, message) {
-      navigator.clipboard.writeText(text).then(() => {
-        const toast = document.getElementById('toast');
-        const toastText = document.getElementById('toast-text');
-        if (toast && toastText) {
-          toastText.textContent = message || 'Nusxalandi!';
-          toast.classList.add('show');
-          setTimeout(() => {
-            toast.classList.remove('show');
-          }, 2500);
+    // Ovoz Toggle
+    document.getElementById('sound-toggle').addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-icon').className = soundEnabled
+        ? 'fa-solid fa-volume-high text-emerald-400'
+        : 'fa-solid fa-volume-xmark text-slate-500';
+      if (soundEnabled) playCyberSound('click');
+      showToast(soundEnabled ? "Ovozlar yoqildi!" : "Ovoz o'chirildi");
+    });
+
+    // 2-BAND: TUGMA BOSILGANDA ROBOT OVOZIDA STATUSNI ESHITISH (Avtomatik emas)
+    function speakRobotGreeting(force = true) {
+      if (!('speechSynthesis' in window)) {
+        showToast("Brauzerda ovoz sintezi mavjud emas");
+        return;
+      }
+
+      playCyberSound('click');
+      const status = getCurrentStatus();
+      let textUz = '';
+      let textRuPhonetic = '';
+
+      if (status === 'work') {
+        textUz = "Assalomu alaykum! Hozir biz ish faoliyatidamiz. Bemalol bog'lanishingiz mumkin.";
+        textRuPhonetic = "Ассалому алайкум! Ҳозир биз иш фаолиятидамиз. Бемалол боғланишингиз мумкин.";
+      } else if (status === 'night') {
+        textUz = "Assalomu alaykum! Hozir dam olish vaqti. Telegram orqali xabar qoldiring, tezda javob beramiz.";
+        textRuPhonetic = "Ассалому алайкум! Ҳозир дам олиш вақти. Телеграм орқали хабар қолдиринг, тезда жавоб берамиз.";
+      } else {
+        textUz = "Assalomu alaykum! Hozir biz ish vaqtidan tashqaridamiz. Telegramdan bemalol murojaat qilishingiz mumkin.";
+        textRuPhonetic = "Ассалому алайкум! Ҳозир биз иш вақтидан ташқаридамиз. Телеграмдан бемалол мурожаат қилишингиз мумкин.";
+      }
+
+      try {
+        window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+
+        function executeSpeech() {
+          const voices = window.speechSynthesis.getVoices() || [];
+          
+          // O'zbek yoki Turkiy ovoz bormi tekshiramiz
+          const uzVoice = voices.find(v => v.lang.startsWith('uz') || v.lang.startsWith('tr'));
+          // Rus tili ovozi (Windowsda kirillcha Uzbek matnini juda ravon va toza o'qiydi)
+          const ruVoice = voices.find(v => v.lang.startsWith('ru'));
+          const naturalVoice = voices.find(v => v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('natural'));
+
+          const chosenVoice = uzVoice || ruVoice || naturalVoice || voices[0];
+          const isRussianEngine = chosenVoice && (chosenVoice.lang.startsWith('ru') || (!uzVoice && !naturalVoice));
+
+          // Rus tili sintezatoriga kirillcha berilsa o'zbekcha so'zlarni 100% toza va tabiiy talaffuz qiladi
+          const utter = new SpeechSynthesisUtterance(isRussianEngine ? textRuPhonetic : textUz);
+          utter.rate = 0.95;
+          utter.pitch = 0.95;
+          utter.volume = 1.0;
+
+          if (chosenVoice) {
+            utter.voice = chosenVoice;
+            utter.lang = chosenVoice.lang;
+          }
+
+          window.speechSynthesis.speak(utter);
+          showToast("Robot ovozi yangramoqda...");
         }
+
+        if (window.speechSynthesis.getVoices().length > 0) {
+          executeSpeech();
+        } else {
+          window.speechSynthesis.onvoiceschanged = executeSpeech;
+        }
+      } catch (err) {
+        console.warn("Speech synthesis xatosi:", err);
+      }
+    }
+
+    function getCurrentStatus() {
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const fd = new Date(utc + (3600000 * 5)); // Farg'ona UTC+5
+      const day = fd.getDay();
+      const hour = fd.getHours();
+      const totalMin = hour * 60 + fd.getMinutes();
+      const isNight = (hour >= 22 || hour < 7);
+      const isWeekdayWork = (day >= 1 && day <= 5) && (totalMin >= 540 && totalMin < 1080);
+      const isSatWork = (day === 6) && (totalMin >= 540 && totalMin < 840);
+      if (isWeekdayWork || isSatWork) return 'work';
+      if (isNight) return 'night';
+      return 'off';
+    }
+
+    // 6-BAND: FARG'ONA VAQTI VA TO'LIQ MATNLI STATUS
+    const weekDaysUz = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
+    const monthsUz = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+
+    function updateLiveSchedule() {
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const fd = new Date(utc + (3600000 * 5));
+
+      const day = fd.getDay();
+      const hour = fd.getHours();
+      const totalMin = hour * 60 + fd.getMinutes();
+
+      const hStr = String(hour).padStart(2, '0');
+      const mStr = String(fd.getMinutes()).padStart(2, '0');
+      const sStr = String(fd.getSeconds()).padStart(2, '0');
+      const clockFormatted = `${hStr}:${mStr}:${sStr}`;
+
+      const timeEl = document.getElementById('fargona-time');
+      if (timeEl) timeEl.textContent = clockFormatted;
+
+      const clockSmall = document.getElementById('live-status-clock-small');
+      if (clockSmall) clockSmall.textContent = clockFormatted;
+
+      const dateEl = document.getElementById('fargona-date');
+      if (dateEl) {
+        dateEl.textContent = `${weekDaysUz[day]}, ${fd.getDate()}-${monthsUz[fd.getMonth()]} ${fd.getFullYear()}`;
+      }
+
+      const card = document.getElementById('live-status-card');
+      const dot = document.getElementById('live-status-dot');
+      const badge = document.getElementById('live-status-badge');
+      const descShort = document.getElementById('live-status-desc-short');
+      const action = document.getElementById('live-status-action');
+      if (!card || !dot || !badge || !descShort || !action) return;
+
+      const isNight = (hour >= 22 || hour < 7);
+      const isWeekdayWork = (day >= 1 && day <= 5) && (totalMin >= 540 && totalMin < 1080);
+      const isSatWork = (day === 6) && (totalMin >= 540 && totalMin < 840);
+
+      if (isWeekdayWork || isSatWork) {
+        // YASHIL ISH REJIMI (Ixcham, 2 barobar kichik)
+        card.className = 'px-3 py-1.5 rounded-xl bg-cyber-card/95 border border-emerald-500/70 shadow-[0_0_12px_rgba(16,185,129,0.2)] transition-all duration-300 flex items-center justify-between gap-2';
+        dot.className = 'w-2 h-2 rounded-full shrink-0 bg-emerald-500 shadow-[0_0_8px_#10B981] animate-pulse';
+        badge.className = 'px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shrink-0';
+        badge.textContent = '🟢 ISH REJIMI';
+        descShort.textContent = "Qo'ng'iroq va Telegramga ochiq";
+        action.className = 'py-1 px-2 rounded-md text-[9.5px] font-bold shrink-0 bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm flex items-center gap-1 transition-transform hover:scale-105 active:scale-95 font-mono';
+        action.href = 'tel:+998995160021';
+        action.innerHTML = '<i class="fa-solid fa-phone text-[9px]"></i><span>Bog\'lanish</span>';
+      } else if (isNight) {
+        // QIZIL DAM OLISH REJIMI (Ixcham)
+        card.className = 'px-3 py-1.5 rounded-xl bg-cyber-card/95 border border-rose-500/70 shadow-[0_0_12px_rgba(239,68,68,0.2)] transition-all duration-300 flex items-center justify-between gap-2';
+        dot.className = 'w-2 h-2 rounded-full shrink-0 bg-rose-500 shadow-[0_0_8px_#EF4444] animate-pulse';
+        badge.className = 'px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/40 shrink-0';
+        badge.textContent = '🔴 DAM OLISH REJIMI';
+        descShort.textContent = "Telegram orqali xabar qoldiring";
+        action.className = 'py-1 px-2 rounded-md text-[9.5px] font-bold shrink-0 bg-rose-600 hover:bg-rose-500 text-white shadow-sm flex items-center gap-1 transition-transform hover:scale-105 active:scale-95 font-mono';
+        action.href = 'https://t.me/Jalolov_IST';
+        action.innerHTML = '<i class="fa-brands fa-telegram text-[9px]"></i><span>Xabar Yozish</span>';
+      } else {
+        // SARIQ NAVBATCHI REJIM (KATTA HARFLARDA: NAVBATCHI REJIM)
+        card.className = 'px-3 py-1.5 rounded-xl bg-cyber-card/95 border border-amber-500/70 shadow-[0_0_12px_rgba(245,158,11,0.2)] transition-all duration-300 flex items-center justify-between gap-2';
+        dot.className = 'w-2 h-2 rounded-full shrink-0 bg-amber-400 shadow-[0_0_8px_#F59E0B] animate-pulse';
+        badge.className = 'px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/40 shrink-0';
+        badge.textContent = '🟡 NAVBATCHI REJIM';
+        descShort.textContent = "Telegram orqali murojaat qiling";
+        action.className = 'py-1 px-2 rounded-md text-[9.5px] font-bold shrink-0 bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-sm flex items-center gap-1 transition-transform hover:scale-105 active:scale-95 font-mono';
+        action.href = 'https://t.me/Jalolov_IST';
+        action.innerHTML = '<i class="fa-brands fa-telegram text-[9px]"></i><span>Yozish</span>';
+      }
+    }
+
+    // PASSACAGLIA MUSIQASI BOSHQARUVI (AUDIO + WEB AUDIO SINTESIS ZAXIRASI)
+    let passacagliaPlaying = false;
+    let synthTimer = null;
+    let synthAudioCtx = null;
+
+    // Handel-Halvorsen Passacaglia (G minor) akkordlar zanjiri zaxirasi
+    function playPassacagliaSynth() {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!synthAudioCtx) synthAudioCtx = new Ctx();
+        if (synthAudioCtx.state === 'suspended') synthAudioCtx.resume();
+
+        const chords = [
+          [196, 233.08, 293.66, 392],       // Gm
+          [174.61, 220, 293.66, 349.23],    // Dm/F
+          [155.56, 196, 233.08, 311.13],    // Eb
+          [146.83, 174.61, 233.08, 293.66], // Bb/D
+          [130.81, 196, 261.63, 311.13],    // Cm
+          [116.54, 196, 233.08, 293.66],    // Gm/Bb
+          [110, 174.61, 220, 329.63],       // Aø7
+          [146.83, 185, 220, 293.66]        // D7
+        ];
+
+        let chordIdx = 0;
+        function playStep() {
+          if (!passacagliaPlaying) return;
+          const currentChord = chords[chordIdx % chords.length];
+          const now = synthAudioCtx.currentTime;
+
+          currentChord.forEach((freq, i) => {
+            const osc = synthAudioCtx.createOscillator();
+            const gain = synthAudioCtx.createGain();
+            const filter = synthAudioCtx.createBiquadFilter();
+
+            osc.type = i === 0 ? 'sine' : 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now + i * 0.1);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(900, now);
+
+            gain.gain.setValueAtTime(0.001, now + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.035, now + i * 0.1 + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.7);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(synthAudioCtx.destination);
+
+            osc.start(now + i * 0.1);
+            osc.stop(now + 1.8);
+          });
+
+          chordIdx++;
+          synthTimer = setTimeout(playStep, 1700);
+        }
+        playStep();
+      } catch (e) {
+        console.warn("Synth xatosi:", e);
+      }
+    }
+
+    function stopPassacagliaSynth() {
+      if (synthTimer) { clearTimeout(synthTimer); synthTimer = null; }
+    }
+
+    function togglePassacagliaMusic() {
+      const audio = document.getElementById('bg-music');
+      const icon = document.getElementById('music-icon');
+
+      if (!passacagliaPlaying) {
+        passacagliaPlaying = true;
+        if (icon) icon.className = 'fa-solid fa-compact-disc text-amber-400 animate-spin';
+        showToast("🎵 Passacaglia musiqasi yangramoqda...");
+
+        if (audio) {
+          audio.volume = 0.35;
+          audio.play().then(() => {
+            // Audio muvaffaqiyatli ijro etildi
+          }).catch(err => {
+            console.log("Passacaglia audio fayl o'rniga Cyber-Sintezatori yoqildi:", err);
+            playPassacagliaSynth();
+          });
+        } else {
+          playPassacagliaSynth();
+        }
+      } else {
+        passacagliaPlaying = false;
+        if (audio) { audio.pause(); audio.currentTime = 0; }
+        stopPassacagliaSynth();
+        if (icon) icon.className = 'fa-solid fa-music text-amber-400';
+        showToast("Musiqa to'xtatildi");
+      }
+    }
+
+    // TELEFON VA HAVOLALAR (GMAIL: loadingjalolov@gmail.com BILAN)
+    const phoneData = {
+      work: { title: "IT & Loyihalar bo'yicha aloqa", number: "+998995160021", display: "+998 99 516 00 21", icon: "fa-solid fa-headset", color: "text-emerald-400", bg: "bg-emerald-500/10", badge: "ISHCHI RAQAM" },
+      personal: { title: "Shaxsiy to'g'ridan-to'g'ri aloqa", number: "+998912045256", display: "+998 91 204 52 56", icon: "fa-solid fa-user-check", color: "text-indigo-400", bg: "bg-indigo-500/10", badge: "SHAXSIY RAQAM" }
+    };
+
+    const linksData = {
+      work: [
+        { title: "Telegram: @Jalolov_IST", subtitle: "1C Tizimlari, ERP va korporativ IT loyihalar kanali", url: "https://t.me/Jalolov_IST", icon: "fa-brands fa-telegram", badge: "Rasmiy Kanal", badgeClass: "bg-blue-500/10 text-blue-400 border-blue-500/30" },
+        { title: "Instagram: @Jalolov_Systems", subtitle: "Biznesni avtomatlashtirish, amaliy 1C & AI keyslari", url: "https://instagram.com/Jalolov_Systems", icon: "fa-brands fa-instagram", badge: "IT Keyslar", badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/30" },
+        { title: "Email: loadingjalolov@gmail.com", subtitle: "Loyiha takliflari, hisob-faktura va rasmiy yozishmalar", url: "mailto:loadingjalolov@gmail.com", icon: "fa-solid fa-envelope", badge: "Rasmiy Gmail", badgeClass: "bg-red-500/10 text-red-400 border-red-500/30" },
+        { title: "LinkedIn Profili", subtitle: "5+ yillik kasbiy faoliyat, portfolio va tajriba", url: "https://www.linkedin.com/in/zoirjon-jalolov-02503b449/", icon: "fa-brands fa-linkedin", badge: "Rezyume", badgeClass: "bg-sky-500/10 text-sky-400 border-sky-500/30" },
+        { title: "GitHub Ombori", subtitle: "Ochiq kodli tizimlar, skriptlar va IT loyihalar", url: "https://github.com/zoirjonjaloliy-blip", icon: "fa-brands fa-github", badge: "Kodlar", badgeClass: "bg-slate-500/10 text-slate-400 border-slate-500/30" }
+      ],
+      personal: [
+        { title: "Telegram: @Z_Jalolov", subtitle: "Shaxsiy muloqot, maslahat va konsultatsiya", url: "https://t.me/Z_Jalolov", icon: "fa-solid fa-paper-plane", badge: "Shaxsiy Chat", badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" },
+        { title: "Instagram: @Z_Jalolov", subtitle: "Shaxsiy sahifa, hayot tarzi va dasturchi kundaligi", url: "https://instagram.com/Z_Jalolov", icon: "fa-solid fa-camera", badge: "Shaxsiy Blog", badgeClass: "bg-pink-500/10 text-pink-400 border-pink-500/30" },
+        { title: "Twitter / X: @Z_Jalolov", subtitle: "AI, texnologiyalar va dasturlash tendensiyalari", url: "https://x.com/Z_Jalolov", icon: "fa-brands fa-x-twitter", badge: "Fikrlar", badgeClass: "bg-indigo-500/10 text-indigo-400 border-indigo-500/30" }
+      ]
+    };
+
+    // 5-BAND: BUYURTMA MODALI (HAM GMAILGA, HAM TELEGRAMGA PARALLEL YUBORILADI)
+    function openOrderModal() {
+      playCyberSound('click');
+      const fc = document.getElementById('order-form-container');
+      const sc = document.getElementById('order-success-container');
+      if (fc) fc.classList.remove('hidden');
+      if (sc) sc.classList.add('hidden');
+      document.getElementById('order-modal').classList.add('active');
+    }
+
+    function closeOrderModal() {
+      playCyberSound('click');
+      document.getElementById('order-modal').classList.remove('active');
+    }
+
+    function resetOrderModal() {
+      closeOrderModal();
+      setTimeout(() => {
+        const form = document.getElementById('order-form');
+        if (form) form.reset();
+        const fc = document.getElementById('order-form-container');
+        const sc = document.getElementById('order-success-container');
+        if (fc) fc.classList.remove('hidden');
+        if (sc) sc.classList.add('hidden');
+        const submitBtn = document.getElementById('order-submit-btn');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> <span>Yuborish (Telegram & Gmail)</span>';
+        }
+      }, 300);
+    }
+
+    function handleOrderSubmit(e) {
+      e.preventDefault();
+      playCyberSound('copy');
+
+      const name = document.getElementById('order-name').value.trim();
+      const phone = document.getElementById('order-phone').value.trim();
+      const service = document.getElementById('order-service').value;
+      const note = document.getElementById('order-note').value.trim();
+      const submitBtn = document.getElementById('order-submit-btn');
+
+      const nowTime = new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' });
+
+      // Telegram xabari formati
+      let tgMsg = `🚀 YANGI BUYURTMA / KONSULTATSIYA\n\n`;
+      tgMsg += `👤 Ism: ${name}\n`;
+      tgMsg += `📞 Telefon: ${phone}\n`;
+      tgMsg += `🎯 Yo'nalish: ${service}\n`;
+      if (note) tgMsg += `📝 Izoh: ${note}\n`;
+      tgMsg += `\n📅 Vaqt: ${nowTime}\n📧 Nusxasi: loadingjalolov@gmail.com ga yo'naltirildi`;
+
+      const tgUrl = `https://t.me/Jalolov_IST?text=${encodeURIComponent(tgMsg)}`;
+      const mailtoUrl = `mailto:loadingjalolov@gmail.com?subject=${encodeURIComponent("Yangi Buyurtma: " + name + " (" + service + ")")}&body=${encodeURIComponent(tgMsg)}`;
+
+      // 1. TELEGRAMNI ZUDLIK BILAN (BLOKLANMASDAN) OCHISH:
+      try {
+        window.open(tgUrl, '_blank');
+      } catch (err) {
+        console.warn("Telegramni ochishda brauzer to'sig'i:", err);
+      }
+
+      // 2. GMAILGA (loadingjalolov@gmail.com) FORMSUBMIT ORQALI FONDA YUBORISH:
+      fetch("https://formsubmit.co/ajax/loadingjalolov@gmail.com", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `Yangi Buyurtma (LinkHub): ${name} - ${service}`,
+          _captcha: "false",
+          _template: "table",
+          Ism: name,
+          Telefon: phone,
+          Xizmat: service,
+          Izoh: note || "Izoh kiritilmagan",
+          Sana: nowTime
+        })
+      }).then(res => res.json()).then(data => {
+        console.log("FormSubmit qabul qildi:", data);
+      }).catch(err => {
+        console.warn("Gmail API fon xabari:", err);
+      });
+
+      // 3. MODALNI MUVAFFAQIYATLI EKRANGA O'TKAZISH (Foydalanuvchiga 100% kafolatli tugmalar beriladi):
+      const formContainer = document.getElementById('order-form-container');
+      const successContainer = document.getElementById('order-success-container');
+      const tgBtn = document.getElementById('order-tg-btn');
+      const gmailBtn = document.getElementById('order-gmail-btn');
+
+      if (tgBtn) tgBtn.href = tgUrl;
+      if (gmailBtn) gmailBtn.href = mailtoUrl;
+
+      if (formContainer && successContainer) {
+        formContainer.classList.add('hidden');
+        successContainer.classList.remove('hidden');
+      }
+
+      showToast("So'rov qabul qilindi!");
+    }
+
+    // QR MODAL
+    function openQrModal() { playCyberSound('click'); document.getElementById('qr-modal').classList.add('active'); }
+    function closeQrModal() { playCyberSound('click'); document.getElementById('qr-modal').classList.remove('active'); }
+
+    // TERMINAL
+    function toggleTerminal() {
+      playCyberSound('click');
+      const modal = document.getElementById('terminal-modal');
+      modal.classList.toggle('active');
+      if (modal.classList.contains('active')) setTimeout(() => document.getElementById('terminal-input').focus(), 200);
+    }
+
+    function handleTerminalInput(e) {
+      e.preventDefault(); playCyberSound('click');
+      const input = document.getElementById('terminal-input');
+      const body = document.getElementById('terminal-body');
+      const cmd = input.value.trim().toLowerCase();
+      if (!cmd) return;
+
+      const cmdLine = document.createElement('p');
+      cmdLine.innerHTML = `<span class="text-emerald-400 font-bold">jalolov:~$</span> <span class="text-white">${input.value}</span>`;
+      body.appendChild(cmdLine);
+
+      const resp = document.createElement('div');
+      resp.className = 'text-xs text-slate-300 py-1 space-y-1';
+
+      switch (cmd) {
+        case 'help':
+          resp.innerHTML = `<p class="text-cyan-400 font-bold">Mavjud buyruqlar:</p>
+            <p>• <span class="text-emerald-400 font-semibold">skills</span> — Texnik ko'nikmalar</p>
+            <p>• <span class="text-emerald-400 font-semibold">contact</span> — Aloqa ma'lumotlari</p>
+            <p>• <span class="text-emerald-400 font-semibold">1c</span> — 1C yechimlari</p>
+            <p>• <span class="text-emerald-400 font-semibold">time</span> — Farg'ona vaqti</p>
+            <p>• <span class="text-emerald-400 font-semibold">clear</span> — Tozalash</p>
+            <p>• <span class="text-emerald-400 font-semibold">exit</span> — Yopish</p>`;
+          break;
+        case 'skills':
+          resp.innerHTML = `<p class="text-emerald-400 font-bold">Yo'nalishlar:</p><p>1C:Korxona 8.3 | ERP | HR | CRM | Soliq & Didox | AI & LLM | Telegram Bot | Face ID | Web & Mobil</p>`;
+          break;
+        case 'contact':
+          resp.innerHTML = `<p class="text-emerald-400 font-bold">Aloqa:</p><p>💼 IT: +998 99 516 00 21 (TG: @Jalolov_IST)</p><p>👤 Shaxsiy: +998 91 204 52 56 (TG: @Z_Jalolov)</p><p>📧 Gmail: loadingjalolov@gmail.com</p>`;
+          break;
+        case '1c':
+          resp.innerHTML = `<p class="text-amber-400 font-bold">1C Enterprise:</p><p>Savdo, ishlab chiqarish, ombor va buxgalteriya jarayonlarini to'liq avtomatlashtirish.</p>`;
+          break;
+        case 'time':
+          const t = document.getElementById('fargona-time').textContent;
+          const d = document.getElementById('fargona-date').textContent;
+          resp.innerHTML = `<p class="text-cyan-400">Farg'ona: ${t} | ${d}</p>`;
+          break;
+        case 'clear': body.innerHTML = ''; input.value = ''; return;
+        case 'exit': toggleTerminal(); input.value = ''; return;
+        default: resp.innerHTML = `<p class="text-rose-400">Buyruq topilmadi: '${cmd}'. 'help' deb yozing.</p>`;
+      }
+      body.appendChild(resp); input.value = ''; body.scrollTop = body.scrollHeight;
+    }
+
+    // MATRIX RANG PANELI
+    document.getElementById('matrix-color-btn').addEventListener('click', () => {
+      playCyberSound('click');
+      document.getElementById('matrix-color-panel').classList.toggle('hidden');
+    });
+
+    function setMatrixColor(color, name) {
+      playCyberSound('switch');
+      matrixColor = color;
+      document.getElementById('matrix-color-panel').classList.add('hidden');
+      showToast(`Matrix rangi: ${name}`);
+    }
+
+    // 3D TILT
+    function init3DTilt() {
+      document.querySelectorAll('.tilt-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = e.clientX - r.left, y = e.clientY - r.top;
+          const rx = ((y - r.height/2) / (r.height/2)) * -6;
+          const ry = ((x - r.width/2) / (r.width/2)) * 6;
+          card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.01,1.01,1.01)`;
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)'; });
       });
     }
 
-    // Yilni footerga avtomatik qo'yish
-    function initFooterYear() {
-      const yearEl = document.getElementById('current-year');
-      if (yearEl) {
-        yearEl.textContent = new Date().getFullYear();
+    // MATRIX RAIN CANVASI
+    function initMatrixBackground() {
+      const canvas = document.getElementById('matrix-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      resize(); window.addEventListener('resize', resize);
+      const chars = '010101010110100101';
+      const fontSize = 14;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = Array(columns).fill(1);
+      function draw() {
+        ctx.fillStyle = 'rgba(5,8,14,0.08)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = matrixColor;
+        ctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < drops.length; i++) {
+          ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * fontSize, drops[i] * fontSize);
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
       }
+      setInterval(draw, 45);
     }
 
-    // Dastlabki ishga tushirish
+    // 0.8 SONIYA FARQ BILAN KETMA-KET OCHILISH (KIRISH EKRANISIZ, BEVOSITA SAHIFADA)
+    function startStaggeredIntro() {
+      const steps = ['step-0', 'live-status-widget', 'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8'];
+      setTimeout(() => { ['step-0', 'live-status-widget', 'step-1'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('revealed'); }); }, 200);
+      steps.slice(3).forEach((id, i) => { setTimeout(() => { const el = document.getElementById(id); if (el) el.classList.add('revealed'); }, 200 + (i + 1) * 800); });
+    }
+
+    // 3-BAND: KONTAKTNI SAQLASH (.vCard ga loadingjalolov@gmail.com ham kiritildi)
+    function downloadVCard() {
+      playCyberSound('copy');
+      const vc = "BEGIN:VCARD\r\nVERSION:3.0\r\nN:Jalolov;Zoirjon;;;\r\nFN:Jalolov Zoirjon\r\nORG:Jalolov Systems\r\nTITLE:1C Dasturchi & AI Loyiha Menejeri\r\nTEL;TYPE=WORK,VOICE:+998995160021\r\nTEL;TYPE=CELL,VOICE:+998912045256\r\nEMAIL;TYPE=INTERNET:loadingjalolov@gmail.com\r\nURL:https://zoirjonjaloliy-blip.github.io/link-hub/\r\nNOTE:Biznes jarayonlarini avtomatlashtirish mutaxassisi (PM & Dev)\r\nEND:VCARD";
+      const blob = new Blob([vc], { type: "text/vcard;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url; a.download = "Jalolov_Zoirjon.vcf";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showToast("Kontakt fayli (.vcf) yuklandi!");
+    }
+
+    // REJIM ALMASHTIRISH (IT VA SHAXSIY)
+    function switchMode(mode) {
+      playCyberSound('switch'); currentMode = mode;
+      const btnW = document.getElementById('btn-mode-work'), btnP = document.getElementById('btn-mode-personal'), s6 = document.getElementById('step-6');
+      if (mode === 'work') {
+        btnW.className = 'flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-semibold flex items-center justify-center gap-1.5 transition-all duration-300 shadow active:scale-95';
+        btnP.className = 'flex-1 py-2 px-3 rounded-xl text-slate-400 hover:text-white font-medium flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95';
+        if (s6) s6.style.display = 'block';
+      } else {
+        btnP.className = 'flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-purple-600 text-white font-semibold flex items-center justify-center gap-1.5 transition-all duration-300 shadow active:scale-95';
+        btnW.className = 'flex-1 py-2 px-3 rounded-xl text-slate-400 hover:text-white font-medium flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95';
+        if (s6) s6.style.display = 'none';
+      }
+      renderPhone(mode); renderLinks(mode);
+    }
+
+    function renderPhone(mode) {
+      const c = document.getElementById('phone-container'); if (!c) return;
+      const p = phoneData[mode];
+      c.innerHTML = `<div class="tilt-card p-3.5 rounded-2xl bg-cyber-card/90 border border-cyber-border shadow-md flex items-center justify-between hover:border-emerald-500/50 transition-all">
+        <a href="tel:${p.number}" onclick="playCyberSound('click')" class="flex items-center gap-3 text-left flex-1 min-w-0 group">
+          <div class="w-10 h-10 rounded-xl ${p.bg} ${p.color} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform"><i class="${p.icon} text-base"></i></div>
+          <div class="truncate"><div class="flex items-center gap-2"><span class="text-[10px] text-slate-400">${p.title}</span><span class="px-1.5 py-0.2 rounded text-[9px] bg-cyber-bg border border-cyber-border font-bold ${p.color}">${p.badge}</span></div>
+          <span class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors">${p.display}</span></div></a>
+        <button type="button" onclick="copyToClipboard('${p.number}','${p.display} nusxalandi!')" class="w-9 h-9 rounded-xl bg-cyber-bg border border-cyber-border text-slate-400 hover:text-emerald-400 hover:border-emerald-500/50 hover:scale-105 active:scale-95 flex items-center justify-center transition-all ml-2 shrink-0"><i class="fa-regular fa-copy text-sm"></i></button></div>`;
+      init3DTilt();
+    }
+
+    function renderLinks(mode) {
+      const c = document.getElementById('links-container'); if (!c) return;
+      c.innerHTML = (linksData[mode] || []).map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" onclick="playCyberSound('click')"
+        class="tilt-card group relative flex items-center justify-between w-full p-3.5 rounded-2xl bg-cyber-card/85 hover:bg-cyber-card border border-cyber-border hover:border-emerald-500/70 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:scale-[0.99]">
+        <div class="w-10 h-10 rounded-xl bg-[#0F172A] border border-cyber-border group-hover:border-emerald-500/40 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center shrink-0 transition-all group-hover:scale-105"><i class="${l.icon} text-base"></i></div>
+        <div class="flex-1 px-3 text-left min-w-0"><div class="flex items-center gap-1.5"><span class="font-medium text-sm text-slate-100 group-hover:text-emerald-400 transition-colors truncate">${l.title}</span>
+        <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold rounded-md border ${l.badgeClass}">${l.badge}</span></div>
+        <p class="text-[11px] text-slate-400 truncate mt-0.5">${l.subtitle}</p></div>
+        <div class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all shrink-0"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></div></a>`).join('');
+      init3DTilt();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast'), tt = document.getElementById('toast-text');
+      if (t && tt) { tt.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+    }
+
+    function copyToClipboard(text, msg) { playCyberSound('copy'); navigator.clipboard.writeText(text).then(() => showToast(msg)); }
+
+    // THEME TOGGLE
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      playCyberSound('click');
+      const isDark = document.documentElement.classList.toggle('dark');
+      document.body.classList.toggle('bg-cyber-bg', isDark); document.body.classList.toggle('text-slate-100', isDark);
+      document.body.classList.toggle('bg-slate-100', !isDark); document.body.classList.toggle('text-slate-800', !isDark);
+      document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-moon text-emerald-400' : 'fa-solid fa-sun text-amber-500';
+    });
+
+    // DASTLABKI YUKLASH (KIRISH EKRANISIZ, DARHOL ASOSIY SAHIFA ISHGA TUSHADI)
     document.addEventListener('DOMContentLoaded', () => {
-      renderLinks();
-      initFooterYear();
+      initMatrixBackground();
+      renderPhone('work');
+      renderLinks('work');
+      updateLiveSchedule();
+      setInterval(updateLiveSchedule, 1000);
+      startStaggeredIntro(); // 0.8 soniya ketma-ket ochilish darhol boshlanadi
+      init3DTilt();
+      document.getElementById('current-year').textContent = new Date().getFullYear();
     });
   </script>
 </body>

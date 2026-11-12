@@ -164,10 +164,11 @@
       </div>
     </div>
 
-    <!-- Passacaglia Fon Audio Teglari -->
-    <audio id="bg-music" loop preload="none">
+    <!-- Passacaglia Fon Audio Teglari (Wikimedia Commons global CDN orqali) -->
+    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
+      <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6c/Johan_Halvorsen_-_Passacaglia_on_a_theme_by_Handel.ogg/Johan_Halvorsen_-_Passacaglia_on_a_theme_by_Handel.ogg.mp3" type="audio/mpeg">
+      <source src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Johan_Halvorsen_-_Passacaglia_on_a_theme_by_Handel.ogg" type="audio/ogg">
       <source src="passacaglia.mp3" type="audio/mpeg">
-      <source src="https://ia800301.us.archive.org/15/items/HalvorsenPassacagliaForViolinAndCello/HalvorsenPassacagliaForViolinAndCello.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Matrix Rang Tanlash Paneli -->
@@ -723,95 +724,124 @@
       }
     }
 
-    // PASSACAGLIA MUSIQASI BOSHQARUVI (AUDIO + WEB AUDIO SINTESIS ZAXIRASI)
+    // PASSACAGLIA MUSIQASI (INSTANT WEB AUDIO SINTESATOR + KAFOLATLANGAN OVOZ)
     let passacagliaPlaying = false;
     let synthTimer = null;
     let synthAudioCtx = null;
 
-    // Handel-Halvorsen Passacaglia (G minor) akkordlar zanjiri zaxirasi
-    function playPassacagliaSynth() {
+    // Handel-Halvorsen Passacaglia (G minor)
+    function startPassacagliaAudio() {
       try {
         const Ctx = window.AudioContext || window.webkitAudioContext;
         if (!synthAudioCtx) synthAudioCtx = new Ctx();
-        if (synthAudioCtx.state === 'suspended') synthAudioCtx.resume();
 
-        const chords = [
-          [196, 233.08, 293.66, 392],       // Gm
-          [174.61, 220, 293.66, 349.23],    // Dm/F
-          [155.56, 196, 233.08, 311.13],    // Eb
-          [146.83, 174.61, 233.08, 293.66], // Bb/D
-          [130.81, 196, 261.63, 311.13],    // Cm
-          [116.54, 196, 233.08, 293.66],    // Gm/Bb
-          [110, 174.61, 220, 329.63],       // Aø7
-          [146.83, 185, 220, 293.66]        // D7
+        // Foydalanuvchi bosgan zahoti AudioContext ni uyg'otish
+        if (synthAudioCtx.state === 'suspended') {
+          synthAudioCtx.resume();
+        }
+
+        // Passacaglia 8 ta akkord ketma-ketligi (G minor)
+        const progression = [
+          { bass: 98.0,  chord: [196.0, 233.08, 293.66], melody: [392.0, 587.33, 466.16, 392.0] },    // Gm
+          { bass: 87.31, chord: [174.61, 220.0, 293.66], melody: [349.23, 523.25, 440.0, 349.23] },    // Dm/F
+          { bass: 77.78, chord: [155.56, 196.0, 233.08], melody: [311.13, 466.16, 392.0, 311.13] },    // Eb
+          { bass: 73.42, chord: [146.83, 174.61, 233.08], melody: [293.66, 466.16, 349.23, 293.66] },   // Bb/D
+          { bass: 65.41, chord: [130.81, 196.0, 261.63], melody: [261.63, 523.25, 392.0, 311.13] },    // Cm
+          { bass: 58.27, chord: [116.54, 196.0, 233.08], melody: [293.66, 392.0, 466.16, 392.0] },     // Gm/Bb
+          { bass: 55.0,  chord: [110.0, 174.61, 220.0],  melody: [220.0, 440.0, 329.63, 261.63] },     // Aø7
+          { bass: 73.42, chord: [146.83, 185.0, 220.0],  melody: [293.66, 369.99, 440.0, 293.66] }     // D7
         ];
 
-        let chordIdx = 0;
+        let step = 0;
+
         function playStep() {
-          if (!passacagliaPlaying) return;
-          const currentChord = chords[chordIdx % chords.length];
+          if (!passacagliaPlaying || !synthAudioCtx) return;
+          const current = progression[step % progression.length];
           const now = synthAudioCtx.currentTime;
 
-          currentChord.forEach((freq, i) => {
-            const osc = synthAudioCtx.createOscillator();
-            const gain = synthAudioCtx.createGain();
-            const filter = synthAudioCtx.createBiquadFilter();
+          // 1. CHUQUR BASS
+          const bassOsc = synthAudioCtx.createOscillator();
+          const bassGain = synthAudioCtx.createGain();
+          bassOsc.type = 'triangle';
+          bassOsc.frequency.setValueAtTime(current.bass, now);
+          bassGain.gain.setValueAtTime(0.25, now);
+          bassGain.gain.exponentialRampToValueAtTime(0.001, now + 1.7);
+          bassOsc.connect(bassGain);
+          bassGain.connect(synthAudioCtx.destination);
+          bassOsc.start(now);
+          bassOsc.stop(now + 1.75);
 
-            osc.type = i === 0 ? 'sine' : 'sawtooth';
-            osc.frequency.setValueAtTime(freq, now + i * 0.1);
+          // 2. POLIFONIK GARMONIYA (AKKORDLAR)
+          current.chord.forEach((freq, idx) => {
+            const chordOsc = synthAudioCtx.createOscillator();
+            const chordGain = synthAudioCtx.createGain();
+            const chordFilter = synthAudioCtx.createBiquadFilter();
 
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(900, now);
+            chordOsc.type = 'sawtooth';
+            chordOsc.frequency.setValueAtTime(freq, now + idx * 0.03);
 
-            gain.gain.setValueAtTime(0.001, now + i * 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.035, now + i * 0.1 + 0.08);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.7);
+            chordFilter.type = 'lowpass';
+            chordFilter.frequency.setValueAtTime(1400, now);
 
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(synthAudioCtx.destination);
+            chordGain.gain.setValueAtTime(0.001, now + idx * 0.03);
+            chordGain.gain.linearRampToValueAtTime(0.08, now + idx * 0.03 + 0.06);
+            chordGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
 
-            osc.start(now + i * 0.1);
-            osc.stop(now + 1.8);
+            chordOsc.connect(chordFilter);
+            chordFilter.connect(chordGain);
+            chordGain.connect(synthAudioCtx.destination);
+
+            chordOsc.start(now + idx * 0.03);
+            chordOsc.stop(now + 1.65);
           });
 
-          chordIdx++;
-          synthTimer = setTimeout(playStep, 1700);
+          // 3. PASSACAGLIA VIRTUOZ KUYI (SKRIPKA / KLAVIDA NOTALAR)
+          current.melody.forEach((mFreq, mIdx) => {
+            const mOsc = synthAudioCtx.createOscillator();
+            const mGain = synthAudioCtx.createGain();
+
+            const noteStart = now + mIdx * 0.42;
+            mOsc.type = 'triangle';
+            mOsc.frequency.setValueAtTime(mFreq, noteStart);
+
+            mGain.gain.setValueAtTime(0.001, noteStart);
+            mGain.gain.linearRampToValueAtTime(0.22, noteStart + 0.04);
+            mGain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.44);
+
+            mOsc.connect(mGain);
+            mGain.connect(synthAudioCtx.destination);
+
+            mOsc.start(noteStart);
+            mOsc.stop(noteStart + 0.45);
+          });
+
+          step++;
+          synthTimer = setTimeout(playStep, 1750);
         }
+
         playStep();
       } catch (e) {
-        console.warn("Synth xatosi:", e);
+        console.warn("Audio xatosi:", e);
       }
     }
 
-    function stopPassacagliaSynth() {
+    function stopPassacagliaAudio() {
       if (synthTimer) { clearTimeout(synthTimer); synthTimer = null; }
     }
 
     function togglePassacagliaMusic() {
-      const audio = document.getElementById('bg-music');
       const icon = document.getElementById('music-icon');
 
       if (!passacagliaPlaying) {
         passacagliaPlaying = true;
         if (icon) icon.className = 'fa-solid fa-compact-disc text-amber-400 animate-spin';
-        showToast("🎵 Passacaglia musiqasi yangramoqda...");
+        showToast("🎵 Passacaglia yangramoqda...");
 
-        if (audio) {
-          audio.volume = 0.35;
-          audio.play().then(() => {
-            // Audio muvaffaqiyatli ijro etildi
-          }).catch(err => {
-            console.log("Passacaglia audio fayl o'rniga Cyber-Sintezatori yoqildi:", err);
-            playPassacagliaSynth();
-          });
-        } else {
-          playPassacagliaSynth();
-        }
+        // Zudlik bilan musiqani chalish (0ms kechikish, internetga bog'liq emas)
+        startPassacagliaAudio();
       } else {
         passacagliaPlaying = false;
-        if (audio) { audio.pause(); audio.currentTime = 0; }
-        stopPassacagliaSynth();
+        stopPassacagliaAudio();
         if (icon) icon.className = 'fa-solid fa-music text-amber-400';
         showToast("Musiqa to'xtatildi");
       }

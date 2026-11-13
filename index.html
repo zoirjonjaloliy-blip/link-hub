@@ -47,9 +47,13 @@
     }
   </script>
 
-  <!-- Google Fonts -->
+  <!-- Preconnect & DNS Prefetch for Fast Mobile Loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- FontAwesome 6 Icons -->
@@ -59,29 +63,32 @@
     body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-    /* QIZIL LAZER SKANER CHIZIG'I */
+    /* QIZIL LAZER SKANER CHIZIG'I (GPU Compositor bilan) */
     #red-scanner-line {
-      position: fixed; left: 0; right: 0; top: -10px; height: 3px;
+      position: fixed; left: 0; right: 0; top: 0; height: 3px;
       background: #EF4444;
-      box-shadow: 0 0 10px 2px #EF4444, 0 0 25px 6px rgba(239,68,68,0.7), 0 0 45px 12px rgba(220,38,38,0.4);
+      box-shadow: 0 0 10px 2px #EF4444, 0 0 25px 5px rgba(239,68,68,0.6);
       z-index: 9999; pointer-events: none; opacity: 0;
+      transform: translateY(-10px);
+      will-change: transform, opacity;
     }
-    .laser-scanning { animation: scanDownwards 2.6s linear forwards; }
+    .laser-scanning { animation: scanDownwards 1.6s ease-out forwards; }
     @keyframes scanDownwards {
-      0% { top: -10px; opacity: 1; }
-      90% { top: 100vh; opacity: 1; }
-      100% { top: 105vh; opacity: 0; }
+      0% { transform: translateY(-10px); opacity: 1; }
+      85% { transform: translateY(100vh); opacity: 1; }
+      100% { transform: translateY(105vh); opacity: 0; }
     }
 
-    /* 0.8s qadam bilan ketma-ket ochilish */
+    /* Tezkor va silliq kaskadli ochilish (GPU tezlatgich bilan) */
     .stagger-node {
-      opacity: 0; transform: translateY(28px); filter: blur(6px);
-      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1), filter 0.75s ease;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1);
+      will-change: opacity, transform;
       pointer-events: none;
     }
-    .stagger-node.revealed { opacity: 1; transform: translateY(0); filter: blur(0); pointer-events: auto; }
+    .stagger-node.revealed { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
-    .glass-card { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .glass-card { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 
     .tilt-card {
       transform-style: preserve-3d;
@@ -171,8 +178,8 @@
       </button>
     </div>
 
-    <!-- Passacaglia Original Audio Tegi -->
-    <audio id="bg-music" loop preload="auto">
+    <!-- Passacaglia Original Audio Tegi (preload="none" - Mobil trafikni tejaydi va tez ochiladi) -->
+    <audio id="bg-music" loop preload="none">
       <source src="passacaglia.mp3" type="audio/mpeg">
       <source src="./passacaglia.mp3" type="audio/mpeg">
     </audio>
@@ -1653,9 +1660,12 @@
       showToast(`Matrix rangi: ${name}`);
     }
 
-    // 3D TILT
+    // 3D TILT (Faqat kursorli kompyuterlarda, mobilda protsessorni yuklamaydi va takrorlanmaydi)
     function init3DTilt() {
+      if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
       document.querySelectorAll('.tilt-card').forEach(card => {
+        if (card.dataset.tiltInit) return;
+        card.dataset.tiltInit = 'true';
         card.addEventListener('mousemove', (e) => {
           const r = card.getBoundingClientRect();
           const x = e.clientX - r.left, y = e.clientY - r.top;
@@ -1667,36 +1677,74 @@
       });
     }
 
-    // MATRIX RAIN CANVASI
+    // MATRIX RAIN CANVASI (GPU & Mobil Optimizatsiyalangan, requestAnimationFrame bilan)
     function initMatrixBackground() {
       const canvas = document.getElementById('matrix-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-      resize(); window.addEventListener('resize', resize);
-      const chars = '010101010110100101';
-      const fontSize = 14;
-      const columns = Math.floor(canvas.width / fontSize);
-      const drops = Array(columns).fill(1);
-      function draw() {
-        ctx.fillStyle = 'rgba(5,8,14,0.08)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = matrixColor;
-        ctx.font = fontSize + 'px monospace';
-        for (let i = 0; i < drops.length; i++) {
-          ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * fontSize, drops[i] * fontSize);
-          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-          drops[i]++;
-        }
+      const isMobile = window.innerWidth < 640;
+      const fontSize = isMobile ? 18 : 14;
+      let columns, drops;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        columns = Math.floor(canvas.width / fontSize);
+        drops = Array(columns).fill(1);
       }
-      setInterval(draw, 45);
+      resize();
+
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(resize, 150);
+      }, { passive: true });
+
+      const chars = '010101010110100101';
+      let lastDraw = 0;
+      const targetInterval = isMobile ? 65 : 45; // Mobilda yengil va tejamkor FPS
+
+      function draw(timestamp) {
+        if (document.hidden) {
+          requestAnimationFrame(draw);
+          return;
+        }
+
+        if (timestamp - lastDraw >= targetInterval) {
+          lastDraw = timestamp;
+          ctx.fillStyle = 'rgba(5,8,14,0.09)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = matrixColor;
+          ctx.font = fontSize + 'px monospace';
+
+          for (let i = 0; i < drops.length; i++) {
+            ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      requestAnimationFrame(draw);
     }
 
-    // 0.8 SONIYA FARQ BILAN KETMA-KET OCHILISH (KIRISH EKRANISIZ, BEVOSITA SAHIFADA)
+    // TEZKOR VA SHIDDATLI OCHILISH (Mobilda 0.6 soniyada to'liq tayyor bo'ladi)
     function startStaggeredIntro() {
       const steps = ['step-0', 'live-status-widget', 'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8'];
-      setTimeout(() => { ['step-0', 'live-status-widget', 'step-1'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('revealed'); }); }, 200);
-      steps.slice(3).forEach((id, i) => { setTimeout(() => { const el = document.getElementById(id); if (el) el.classList.add('revealed'); }, 200 + (i + 1) * 800); });
+      setTimeout(() => {
+        ['step-0', 'live-status-widget', 'step-1'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.add('revealed');
+        });
+      }, 50);
+
+      steps.slice(3).forEach((id, i) => {
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) el.classList.add('revealed');
+        }, 80 + (i + 1) * 90);
+      });
     }
 
     // 3-BAND: KONTAKTNI SAQLASH (.vCard ga loadingjalolov@gmail.com ham kiritildi)
@@ -1773,7 +1821,7 @@
       renderLinks('work');
       updateLiveSchedule();
       setInterval(updateLiveSchedule, 1000);
-      startStaggeredIntro(); // 0.8 soniya ketma-ket ochilish darhol boshlanadi
+      startStaggeredIntro(); // Tezkor kaskadli ochilish darhol boshlanadi
       init3DTilt();
       document.getElementById('current-year').textContent = new Date().getFullYear();
     });

@@ -123,52 +123,58 @@
   <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none -z-20 opacity-25 dark:opacity-30"></canvas>
   <div class="fixed -top-32 left-1/2 -translate-x-1/2 w-[650px] h-[360px] bg-gradient-to-b from-indigo-600/20 via-emerald-500/10 to-transparent blur-3xl pointer-events-none -z-10 animate-glow-pulse"></div>
 
-  <!-- YUQORI ASBOBLAR PANELI (Matrix ranglari, QR, Terminal, Theme) -->
+  <!-- YUQORI ASBOBLAR PANELI (Soat va kun tepada alohida, ikonkalar pastda) -->
   <div id="step-0" class="stagger-node w-full max-w-md flex flex-col gap-2 pt-2 pb-2">
-    <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-      
-      <!-- Farg'ona Soat & Sana Mini Bloki -->
-      <div class="flex items-center gap-1.5 bg-cyber-card/80 border border-cyber-border px-2.5 py-1.5 rounded-xl shadow-sm min-w-0">
-        <i class="fa-regular fa-clock text-emerald-400 text-[11px] shrink-0"></i>
-        <div class="flex flex-col min-w-0">
-          <div class="flex items-center gap-1 text-[10px]">
-            <span class="text-slate-500">Farg'ona:</span>
-            <span id="fargona-time" class="text-emerald-400 font-bold">--:--:--</span>
-          </div>
-          <span id="fargona-date" class="text-[9px] text-slate-400 truncate">-- --- ----</span>
-        </div>
+    
+    <!-- 1-QATOR: Soat va Kun (Tepada alohida chiroyli blok) -->
+    <div class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl bg-cyber-card/90 border border-cyber-border text-xs font-mono shadow-sm">
+      <div class="flex items-center gap-2">
+        <i class="fa-regular fa-clock text-emerald-400 text-xs"></i>
+        <span class="text-slate-400 text-[11px]">Farg'ona:</span>
+        <span id="fargona-time" class="text-emerald-400 font-bold tracking-wider text-xs">--:--:--</span>
       </div>
-
-      <!-- Asboblar -->
-      <div class="flex items-center gap-1.5 shrink-0">
-        <!-- Passacaglia Musiqasi Tugmasi -->
-        <button id="music-toggle" onclick="togglePassacagliaMusic()" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-amber-400/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Passacaglia Musiqasini Tinglash">
-          <i id="music-icon" class="fa-solid fa-music text-amber-400"></i>
-        </button>
-        <button id="sound-toggle" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-emerald-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Ovoz">
-          <i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400"></i>
-        </button>
-        <button id="matrix-color-btn" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyan-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Matrix Rangi">
-          <i class="fa-solid fa-palette text-cyan-400"></i>
-        </button>
-        <button onclick="openQrModal()" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyan-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="QR Kod">
-          <i class="fa-solid fa-qrcode text-cyan-400"></i>
-        </button>
-        <button onclick="toggleTerminal()" class="px-2 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-indigo-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center gap-1 transition-all text-[11px]" title="Terminal">
-          <i class="fa-solid fa-terminal text-indigo-400 text-[10px]"></i>
-          <span class="hidden sm:inline font-bold">>_</span>
-        </button>
-        <button id="theme-toggle" class="w-8 h-8 rounded-lg bg-cyber-card border border-cyber-border hover:border-emerald-500/50 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Mavzu">
-          <i id="theme-icon" class="fa-solid fa-moon text-emerald-400"></i>
-        </button>
+      <div class="flex items-center gap-1.5 text-slate-300 text-[11px]">
+        <i class="fa-regular fa-calendar text-cyan-400 text-[10px]"></i>
+        <span id="fargona-date" class="font-medium">-- --- ----</span>
       </div>
     </div>
 
-    <!-- Passacaglia Fon Audio Teglari (Wikimedia Commons global CDN orqali) -->
-    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
-      <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6c/Johan_Halvorsen_-_Passacaglia_on_a_theme_by_Handel.ogg/Johan_Halvorsen_-_Passacaglia_on_a_theme_by_Handel.ogg.mp3" type="audio/mpeg">
-      <source src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Johan_Halvorsen_-_Passacaglia_on_a_theme_by_Handel.ogg" type="audio/ogg">
+    <!-- 2-QATOR: Ikonkalar (Pastki qatorda tartibli) -->
+    <div class="w-full flex items-center justify-between sm:justify-center sm:gap-2">
+      <!-- Passacaglia Musiqasi Tugmasi -->
+      <button id="music-toggle" onclick="togglePassacagliaMusic()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyber-card border border-cyber-border hover:border-amber-400/60 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Passacaglia Musiqasini Tinglash">
+        <i id="music-icon" class="fa-solid fa-music text-amber-400"></i>
+      </button>
+      <!-- Kiber O'yinlar Arkadasi Tugmasi -->
+      <button id="game-toggle" onclick="openGameModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyber-card border border-cyber-border hover:border-purple-400/60 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Kiber Arkada O'yinlari (Ilon, Dino, Breaker)">
+        <i class="fa-solid fa-gamepad text-purple-400"></i>
+      </button>
+      <!-- Ovoz Effekti -->
+      <button id="sound-toggle" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyber-card border border-cyber-border hover:border-emerald-500/60 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Ovoz">
+        <i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400"></i>
+      </button>
+      <!-- Matrix Rangi -->
+      <button id="matrix-color-btn" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyan-500/60 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Matrix Rangi">
+        <i class="fa-solid fa-palette text-cyan-400"></i>
+      </button>
+      <!-- QR Kod -->
+      <button onclick="openQrModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyan-500/60 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="QR Kod">
+        <i class="fa-solid fa-qrcode text-cyan-400"></i>
+      </button>
+      <!-- Terminal -->
+      <button onclick="toggleTerminal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyber-card border border-cyber-border hover:border-indigo-500/60 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Terminal">
+        <i class="fa-solid fa-terminal text-indigo-400 text-xs"></i>
+      </button>
+      <!-- Mavzu (Theme) -->
+      <button id="theme-toggle" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyber-card border border-cyber-border hover:border-emerald-500/60 hover:scale-105 active:scale-95 text-slate-300 flex items-center justify-center transition-all text-xs" title="Mavzu">
+        <i id="theme-icon" class="fa-solid fa-moon text-emerald-400"></i>
+      </button>
+    </div>
+
+    <!-- Passacaglia Original Audio Tegi -->
+    <audio id="bg-music" loop preload="auto">
       <source src="passacaglia.mp3" type="audio/mpeg">
+      <source src="./passacaglia.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Matrix Rang Tanlash Paneli -->
@@ -482,6 +488,109 @@
     </div>
   </div>
 
+  <!-- 7-BAND: KIBER ARKADA O'YINLARI (ILON, DINO, ARKANOID) -->
+  <div id="game-modal" class="cyber-modal fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-sm bg-cyber-card border border-purple-500/50 rounded-3xl p-4 sm:p-5 shadow-2xl flex flex-col font-mono text-xs">
+      
+      <!-- Oyna tepasi -->
+      <div class="flex items-center justify-between border-b border-cyber-border pb-2.5 mb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block cursor-pointer" onclick="closeGameModal()"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+          <span class="text-purple-400 font-bold text-[11px] ml-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>CYBER ARCADE</span>
+          </span>
+        </div>
+        <button type="button" onclick="closeGameModal()" class="text-slate-400 hover:text-white text-base">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- O'yinlarni tanlash tablari (3 ta o'yin) -->
+      <div class="flex items-center p-1 rounded-xl bg-cyber-bg border border-cyber-border mb-2.5 text-[10px]">
+        <button id="tab-snake" onclick="switchGame('snake')" class="flex-1 py-1.5 px-1.5 rounded-lg bg-purple-600 text-white font-bold transition-all text-center">
+          🐍 Ilon (1C)
+        </button>
+        <button id="tab-dino" onclick="switchGame('dino')" class="flex-1 py-1.5 px-1.5 rounded-lg text-slate-400 hover:text-white font-bold transition-all text-center">
+          🦖 Dino
+        </button>
+        <button id="tab-breaker" onclick="switchGame('breaker')" class="flex-1 py-1.5 px-1.5 rounded-lg text-slate-400 hover:text-white font-bold transition-all text-center">
+          🧱 Breaker
+        </button>
+      </div>
+
+      <!-- Hisob, Holat va Rekord Paneli -->
+      <div class="flex items-center justify-between px-3 py-1.5 rounded-xl bg-cyber-bg/90 border border-cyber-border text-[10px] mb-2 text-slate-300">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500">HISOB:</span>
+          <span id="game-score" class="text-emerald-400 font-bold text-xs">0</span>
+        </div>
+        <div id="game-extra-info" class="text-[10px] text-rose-400 font-bold flex items-center gap-1"></div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500">REKORD:</span>
+          <span id="game-highscore" class="text-amber-400 font-bold text-xs">0</span>
+        </div>
+      </div>
+
+      <!-- O'yin Maydoni (Canvas) -->
+      <div class="relative w-full aspect-[4/3] bg-[#04070D] rounded-2xl border border-purple-500/40 overflow-hidden shadow-inner flex items-center justify-center">
+        <canvas id="game-canvas" width="320" height="240" class="w-full h-full object-contain block cursor-pointer"></canvas>
+        
+        <!-- Game Over / Start Overlay -->
+        <div id="game-overlay" class="absolute inset-0 bg-black/85 backdrop-blur-[2px] flex flex-col items-center justify-center p-3 text-center">
+          <h4 id="game-overlay-title" class="text-sm font-bold text-emerald-400 mb-1">CYBER ARCADE</h4>
+          <p id="game-overlay-desc" class="text-[10px] text-slate-300 mb-3 font-sans">Boshlash uchun tugmani bosing</p>
+          <button id="game-start-btn" onclick="startCurrentGame()" class="py-2 px-5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-emerald-600 hover:from-purple-500 hover:to-emerald-500 text-white font-bold text-xs shadow-lg active:scale-95 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i>
+            <span>O'yinni Boshlash</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Boshqaruv Tugmalari (Mobil va Sensor) -->
+      <div id="game-controls-container" class="mt-2.5 flex flex-col items-center">
+        <!-- 1. Snake D-Pad -->
+        <div id="controls-snake" class="flex flex-col items-center gap-1 w-full">
+          <button onclick="handleGameDirection('UP')" class="w-10 h-7 rounded-lg bg-cyber-bg border border-cyber-border hover:border-purple-400 text-slate-300 flex items-center justify-center active:scale-95">
+            <i class="fa-solid fa-caret-up text-sm"></i>
+          </button>
+          <div class="flex items-center gap-3">
+            <button onclick="handleGameDirection('LEFT')" class="w-10 h-7 rounded-lg bg-cyber-bg border border-cyber-border hover:border-purple-400 text-slate-300 flex items-center justify-center active:scale-95">
+              <i class="fa-solid fa-caret-left text-sm"></i>
+            </button>
+            <button onclick="handleGameDirection('DOWN')" class="w-10 h-7 rounded-lg bg-cyber-bg border border-cyber-border hover:border-purple-400 text-slate-300 flex items-center justify-center active:scale-95">
+              <i class="fa-solid fa-caret-down text-sm"></i>
+            </button>
+            <button onclick="handleGameDirection('RIGHT')" class="w-10 h-7 rounded-lg bg-cyber-bg border border-cyber-border hover:border-purple-400 text-slate-300 flex items-center justify-center active:scale-95">
+              <i class="fa-solid fa-caret-right text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Dino Jump Button -->
+        <div id="controls-dino" class="hidden w-full">
+          <button onclick="handleDinoJump()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-purple-600 text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-95 shadow-md">
+            <i class="fa-solid fa-arrow-up text-xs"></i>
+            <span>SAKRASH (Space / Ekranga Bosing)</span>
+          </button>
+        </div>
+
+        <!-- 3. Breaker Paddle Buttons -->
+        <div id="controls-breaker" class="hidden flex items-center justify-between w-full gap-2">
+          <button onclick="handleBreakerMove(-28)" class="flex-1 py-2 rounded-xl bg-cyber-bg border border-cyber-border hover:border-purple-400 text-slate-300 font-bold active:scale-95 flex items-center justify-center gap-1 text-[11px]">
+            <i class="fa-solid fa-arrow-left text-xs"></i> <span>Chapga</span>
+          </button>
+          <button onclick="handleBreakerMove(28)" class="flex-1 py-2 rounded-xl bg-cyber-bg border border-cyber-border hover:border-purple-400 text-slate-300 font-bold active:scale-95 flex items-center justify-center gap-1 text-[11px]">
+            <span>O'ngga</span> <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- QR KOD MODAL -->
   <div id="qr-modal" class="cyber-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
     <div class="relative w-full max-w-xs bg-cyber-card border border-emerald-500/50 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center">
@@ -724,124 +833,27 @@
       }
     }
 
-    // PASSACAGLIA MUSIQASI (INSTANT WEB AUDIO SINTESATOR + KAFOLATLANGAN OVOZ)
+    // PASSACAGLIA ORIGINAL AUDIO BOSHQARUVI
     let passacagliaPlaying = false;
-    let synthTimer = null;
-    let synthAudioCtx = null;
-
-    // Handel-Halvorsen Passacaglia (G minor)
-    function startPassacagliaAudio() {
-      try {
-        const Ctx = window.AudioContext || window.webkitAudioContext;
-        if (!synthAudioCtx) synthAudioCtx = new Ctx();
-
-        // Foydalanuvchi bosgan zahoti AudioContext ni uyg'otish
-        if (synthAudioCtx.state === 'suspended') {
-          synthAudioCtx.resume();
-        }
-
-        // Passacaglia 8 ta akkord ketma-ketligi (G minor)
-        const progression = [
-          { bass: 98.0,  chord: [196.0, 233.08, 293.66], melody: [392.0, 587.33, 466.16, 392.0] },    // Gm
-          { bass: 87.31, chord: [174.61, 220.0, 293.66], melody: [349.23, 523.25, 440.0, 349.23] },    // Dm/F
-          { bass: 77.78, chord: [155.56, 196.0, 233.08], melody: [311.13, 466.16, 392.0, 311.13] },    // Eb
-          { bass: 73.42, chord: [146.83, 174.61, 233.08], melody: [293.66, 466.16, 349.23, 293.66] },   // Bb/D
-          { bass: 65.41, chord: [130.81, 196.0, 261.63], melody: [261.63, 523.25, 392.0, 311.13] },    // Cm
-          { bass: 58.27, chord: [116.54, 196.0, 233.08], melody: [293.66, 392.0, 466.16, 392.0] },     // Gm/Bb
-          { bass: 55.0,  chord: [110.0, 174.61, 220.0],  melody: [220.0, 440.0, 329.63, 261.63] },     // Aø7
-          { bass: 73.42, chord: [146.83, 185.0, 220.0],  melody: [293.66, 369.99, 440.0, 293.66] }     // D7
-        ];
-
-        let step = 0;
-
-        function playStep() {
-          if (!passacagliaPlaying || !synthAudioCtx) return;
-          const current = progression[step % progression.length];
-          const now = synthAudioCtx.currentTime;
-
-          // 1. CHUQUR BASS
-          const bassOsc = synthAudioCtx.createOscillator();
-          const bassGain = synthAudioCtx.createGain();
-          bassOsc.type = 'triangle';
-          bassOsc.frequency.setValueAtTime(current.bass, now);
-          bassGain.gain.setValueAtTime(0.25, now);
-          bassGain.gain.exponentialRampToValueAtTime(0.001, now + 1.7);
-          bassOsc.connect(bassGain);
-          bassGain.connect(synthAudioCtx.destination);
-          bassOsc.start(now);
-          bassOsc.stop(now + 1.75);
-
-          // 2. POLIFONIK GARMONIYA (AKKORDLAR)
-          current.chord.forEach((freq, idx) => {
-            const chordOsc = synthAudioCtx.createOscillator();
-            const chordGain = synthAudioCtx.createGain();
-            const chordFilter = synthAudioCtx.createBiquadFilter();
-
-            chordOsc.type = 'sawtooth';
-            chordOsc.frequency.setValueAtTime(freq, now + idx * 0.03);
-
-            chordFilter.type = 'lowpass';
-            chordFilter.frequency.setValueAtTime(1400, now);
-
-            chordGain.gain.setValueAtTime(0.001, now + idx * 0.03);
-            chordGain.gain.linearRampToValueAtTime(0.08, now + idx * 0.03 + 0.06);
-            chordGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
-
-            chordOsc.connect(chordFilter);
-            chordFilter.connect(chordGain);
-            chordGain.connect(synthAudioCtx.destination);
-
-            chordOsc.start(now + idx * 0.03);
-            chordOsc.stop(now + 1.65);
-          });
-
-          // 3. PASSACAGLIA VIRTUOZ KUYI (SKRIPKA / KLAVIDA NOTALAR)
-          current.melody.forEach((mFreq, mIdx) => {
-            const mOsc = synthAudioCtx.createOscillator();
-            const mGain = synthAudioCtx.createGain();
-
-            const noteStart = now + mIdx * 0.42;
-            mOsc.type = 'triangle';
-            mOsc.frequency.setValueAtTime(mFreq, noteStart);
-
-            mGain.gain.setValueAtTime(0.001, noteStart);
-            mGain.gain.linearRampToValueAtTime(0.22, noteStart + 0.04);
-            mGain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.44);
-
-            mOsc.connect(mGain);
-            mGain.connect(synthAudioCtx.destination);
-
-            mOsc.start(noteStart);
-            mOsc.stop(noteStart + 0.45);
-          });
-
-          step++;
-          synthTimer = setTimeout(playStep, 1750);
-        }
-
-        playStep();
-      } catch (e) {
-        console.warn("Audio xatosi:", e);
-      }
-    }
-
-    function stopPassacagliaAudio() {
-      if (synthTimer) { clearTimeout(synthTimer); synthTimer = null; }
-    }
 
     function togglePassacagliaMusic() {
+      const audio = document.getElementById('bg-music');
       const icon = document.getElementById('music-icon');
+      if (!audio) return;
 
       if (!passacagliaPlaying) {
-        passacagliaPlaying = true;
-        if (icon) icon.className = 'fa-solid fa-compact-disc text-amber-400 animate-spin';
-        showToast("🎵 Passacaglia yangramoqda...");
-
-        // Zudlik bilan musiqani chalish (0ms kechikish, internetga bog'liq emas)
-        startPassacagliaAudio();
+        audio.volume = 0.8;
+        audio.play().then(() => {
+          passacagliaPlaying = true;
+          if (icon) icon.className = 'fa-solid fa-compact-disc text-amber-400 animate-spin';
+          showToast("🎵 Passacaglia musiqasi yangramoqda...");
+        }).catch(err => {
+          console.warn("Audio ijro xatosi:", err);
+          showToast("passacaglia.mp3 fayli GitHub omboriga yuklanishi kerak");
+        });
       } else {
+        audio.pause();
         passacagliaPlaying = false;
-        stopPassacagliaAudio();
         if (icon) icon.className = 'fa-solid fa-music text-amber-400';
         showToast("Musiqa to'xtatildi");
       }
@@ -970,6 +982,600 @@
       showToast("So'rov qabul qilindi!");
     }
 
+    // ==========================================
+    // 7-BAND: KIBER ARKADA O'YINLARI (SNAKE, DINO, BREAKER)
+    // ==========================================
+    let activeGame = 'snake';
+    let gameLoopId = null;
+    let gameScore = 0;
+    let isGameRunning = false;
+
+    const gameScores = {
+      snake: parseInt(localStorage.getItem('linkhub_snake_record') || '0', 10),
+      dino: parseInt(localStorage.getItem('linkhub_dino_record') || '0', 10),
+      breaker: parseInt(localStorage.getItem('linkhub_breaker_record') || '0', 10)
+    };
+
+    function openGameModal() {
+      playCyberSound('click');
+      document.getElementById('game-modal').classList.add('active');
+      switchGame(activeGame);
+    }
+
+    function closeGameModal() {
+      playCyberSound('click');
+      stopAllGames();
+      document.getElementById('game-modal').classList.remove('active');
+    }
+
+    function updateScoreDisplay() {
+      const sEl = document.getElementById('game-score');
+      const hEl = document.getElementById('game-highscore');
+      const extraEl = document.getElementById('game-extra-info');
+      if (sEl) sEl.textContent = gameScore;
+      if (hEl) hEl.textContent = gameScores[activeGame] || 0;
+      if (extraEl) {
+        if (activeGame === 'breaker' && breakerState) {
+          extraEl.innerHTML = '❤️'.repeat(breakerState.lives);
+        } else if (activeGame === 'snake') {
+          extraEl.innerHTML = '<span class="text-emerald-400">🛡️ Ochiq Devor</span>';
+        } else if (activeGame === 'dino') {
+          extraEl.innerHTML = '<span class="text-cyan-400">⚡ Sokin Rejim</span>';
+        } else {
+          extraEl.innerHTML = '';
+        }
+      }
+    }
+
+    function switchGame(name) {
+      stopAllGames();
+      activeGame = name;
+      playCyberSound('switch');
+
+      // Tab tugmalarini yangilash
+      ['snake', 'dino', 'breaker'].forEach(g => {
+        const btn = document.getElementById(`tab-${g}`);
+        const ctrl = document.getElementById(`controls-${g}`);
+        if (btn) {
+          if (g === name) {
+            btn.className = 'flex-1 py-1.5 px-1.5 rounded-lg bg-purple-600 text-white font-bold transition-all text-center';
+          } else {
+            btn.className = 'flex-1 py-1.5 px-1.5 rounded-lg text-slate-400 hover:text-white font-bold transition-all text-center';
+          }
+        }
+        if (ctrl) {
+          if (g === name) ctrl.classList.remove('hidden');
+          else ctrl.classList.add('hidden');
+        }
+      });
+
+      // Overlay ma'lumotlarini sozlash
+      const overlay = document.getElementById('game-overlay');
+      const title = document.getElementById('game-overlay-title');
+      const desc = document.getElementById('game-overlay-desc');
+      const btn = document.getElementById('game-start-btn');
+
+      if (overlay) overlay.classList.remove('hidden');
+      if (title && desc && btn) {
+        btn.innerHTML = '<i class="fa-solid fa-play text-[10px]"></i> <span>Boshlash</span>';
+        if (name === 'snake') {
+          title.textContent = "🐍 KIBER ILON (1C EDITION)";
+          desc.textContent = "Strelkalar orqali '1C' va 'AI' chiplarini to'plang!";
+        } else if (name === 'dino') {
+          title.textContent = "🦖 KIBER DINO RUNNER";
+          desc.textContent = "Space yoki ekranni bosib to'siqlardan sakrang!";
+        } else {
+          title.textContent = "🧱 KIBER ARKANOID";
+          desc.textContent = "Tugmalar yoki surish orqali to'pni qaytaring va bloklarni buzing!";
+        }
+      }
+
+      gameScore = 0;
+      updateScoreDisplay();
+      drawGamePreview();
+    }
+
+    function stopAllGames() {
+      isGameRunning = false;
+      if (gameLoopId) {
+        cancelAnimationFrame(gameLoopId);
+        clearInterval(gameLoopId);
+        gameLoopId = null;
+      }
+    }
+
+    function startCurrentGame() {
+      playCyberSound('click');
+      document.getElementById('game-overlay').classList.add('hidden');
+      stopAllGames();
+      gameScore = 0;
+      updateScoreDisplay();
+      isGameRunning = true;
+
+      if (activeGame === 'snake') initSnakeGame();
+      else if (activeGame === 'dino') initDinoGame();
+      else if (activeGame === 'breaker') initBreakerGame();
+    }
+
+    function gameOver(msg) {
+      stopAllGames();
+      playCyberSound('click');
+
+      // Rekordni yangilash
+      if (gameScore > gameScores[activeGame]) {
+        gameScores[activeGame] = gameScore;
+        localStorage.setItem(`linkhub_${activeGame}_record`, gameScore);
+        showToast(`🎉 Yangi rekord: ${gameScore}!`);
+      }
+      updateScoreDisplay();
+
+      const overlay = document.getElementById('game-overlay');
+      const title = document.getElementById('game-overlay-title');
+      const desc = document.getElementById('game-overlay-desc');
+      const btn = document.getElementById('game-start-btn');
+
+      if (overlay) overlay.classList.remove('hidden');
+      if (title) title.textContent = "💥 O'YIN TUGADI!";
+      if (desc) desc.textContent = `${msg} Natijangiz: ${gameScore} ball`;
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-rotate-right text-[10px]"></i> <span>Qayta O\'ynash</span>';
+    }
+
+    // -------------------------------------------------------------
+    // 1-O'YIN: KIBER ILON (1C & AI CHIP-EATER) — SEKIN & OCHIQ DEVOR
+    // -------------------------------------------------------------
+    let snakeState = null;
+    const foodTokens = ["1C", "AI", "ERP", "CRM", "SQL", "BOT"];
+
+    function initSnakeGame() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+      const gridSize = 16;
+      const cols = canvas.width / gridSize;
+      const rows = canvas.height / gridSize;
+
+      snakeState = {
+        gridSize, cols, rows,
+        snake: [{x: 8, y: 7}, {x: 7, y: 7}, {x: 6, y: 7}],
+        dx: 1, dy: 0, nextDx: 1, nextDy: 0,
+        food: {x: 14, y: 7, label: "1C"},
+        speed: 210 // Sekin va juda qulay boshqaruv tezligi (210ms)
+      };
+
+      function spawnFood() {
+        let fx, fy, valid = false;
+        while (!valid) {
+          fx = Math.floor(Math.random() * cols);
+          fy = Math.floor(Math.random() * rows);
+          valid = !snakeState.snake.some(s => s.x === fx && s.y === fy);
+        }
+        const lbl = foodTokens[Math.floor(Math.random() * foodTokens.length)];
+        snakeState.food = {x: fx, y: fy, label: lbl};
+      }
+
+      function tick() {
+        if (!isGameRunning || activeGame !== 'snake') return;
+        snakeState.dx = snakeState.nextDx;
+        snakeState.dy = snakeState.nextDy;
+
+        let newX = snakeState.snake[0].x + snakeState.dx;
+        let newY = snakeState.snake[0].y + snakeState.dy;
+
+        // Ochiq devorlar: devordan o'tib narigi tomondan chiqish (o'lmaydi)
+        if (newX < 0) newX = cols - 1;
+        else if (newX >= cols) newX = 0;
+        if (newY < 0) newY = rows - 1;
+        else if (newY >= rows) newY = 0;
+
+        const head = { x: newX, y: newY };
+
+        // Faqat o'z dumiga urilsa o'yin tugaydi
+        if (snakeState.snake.some(s => s.x === head.x && s.y === head.y)) {
+          return gameOver("O'z dumiga urildi!");
+        }
+
+        snakeState.snake.unshift(head);
+
+        // Ovqat yeyish
+        if (head.x === snakeState.food.x && head.y === snakeState.food.y) {
+          playCyberSound('copy');
+          gameScore += 10;
+          updateScoreDisplay();
+          spawnFood();
+        } else {
+          snakeState.snake.pop();
+        }
+
+        // Chizish
+        ctx.fillStyle = '#05080E';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Kiber setka chiziqlari
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.05)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < canvas.width; x += gridSize) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+        }
+        for (let y = 0; y < canvas.height; y += gridSize) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+        }
+
+        // Ovqat (1C / AI chip)
+        const fx = snakeState.food.x * gridSize;
+        const fy = snakeState.food.y * gridSize;
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.25)';
+        ctx.fillRect(fx + 1, fy + 1, gridSize - 2, gridSize - 2);
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(fx + 1, fy + 1, gridSize - 2, gridSize - 2);
+        ctx.fillStyle = '#F59E0B';
+        ctx.font = 'bold 9px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(snakeState.food.label, fx + gridSize/2, fy + gridSize/2);
+
+        // Ilon
+        snakeState.snake.forEach((s, idx) => {
+          const sx = s.x * gridSize;
+          const sy = s.y * gridSize;
+          if (idx === 0) {
+            // Bosh
+            ctx.fillStyle = '#10B981';
+            ctx.fillRect(sx + 1, sy + 1, gridSize - 2, gridSize - 2);
+            ctx.fillStyle = '#05080E';
+            ctx.fillRect(sx + 4, sy + 4, 3, 3);
+            ctx.fillRect(sx + 9, sy + 4, 3, 3);
+          } else {
+            ctx.fillStyle = idx % 2 === 0 ? 'rgba(16, 185, 129, 0.85)' : 'rgba(6, 182, 212, 0.85)';
+            ctx.fillRect(sx + 1.5, sy + 1.5, gridSize - 3, gridSize - 3);
+          }
+        });
+      }
+
+      gameLoopId = setInterval(tick, snakeState.speed);
+    }
+
+    function handleGameDirection(dir) {
+      if (activeGame !== 'snake' || !snakeState) return;
+      playCyberSound('click');
+      if (dir === 'UP' && snakeState.dy === 0) { snakeState.nextDx = 0; snakeState.nextDy = -1; }
+      else if (dir === 'DOWN' && snakeState.dy === 0) { snakeState.nextDx = 0; snakeState.nextDy = 1; }
+      else if (dir === 'LEFT' && snakeState.dx === 0) { snakeState.nextDx = -1; snakeState.nextDy = 0; }
+      else if (dir === 'RIGHT' && snakeState.dx === 0) { snakeState.nextDx = 1; snakeState.nextDy = 0; }
+    }
+
+    // -------------------------------------------------------------
+    // 2-O'YIN: KIBER DINO RUNNER — SEKIN & OSON SAKRASH
+    // -------------------------------------------------------------
+    let dinoState = null;
+
+    function initDinoGame() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+      const groundY = 190;
+
+      dinoState = {
+        x: 40, y: groundY - 26, w: 22, h: 26,
+        vy: 0, gravity: 0.46, jumpForce: -9.6, // Yengil, erkin sakrash
+        isGrounded: true,
+        obstacles: [],
+        speed: 2.2, // Sekin, bemalol ulguradigan tezlik (2.2)
+        frame: 0
+      };
+
+      function loop() {
+        if (!isGameRunning || activeGame !== 'dino') return;
+        dinoState.frame++;
+
+        // Fizika
+        dinoState.y += dinoState.vy;
+        dinoState.vy += dinoState.gravity;
+        if (dinoState.y >= groundY - dinoState.h) {
+          dinoState.y = groundY - dinoState.h;
+          dinoState.vy = 0;
+          dinoState.isGrounded = true;
+        }
+
+        // To'siqlar qo'shish (keng oraliq bilan)
+        if (dinoState.frame % 150 === 0 && Math.random() > 0.4) {
+          const obsType = Math.random() > 0.5 ? 'BUG' : '404';
+          dinoState.obstacles.push({
+            x: canvas.width + 10,
+            y: groundY - 20,
+            w: obsType === '404' ? 22 : 16,
+            h: 20,
+            label: obsType
+          });
+        }
+
+        // To'siqlarni siljitish
+        for (let i = dinoState.obstacles.length - 1; i >= 0; i--) {
+          const obs = dinoState.obstacles[i];
+          obs.x -= dinoState.speed;
+
+          // To'qnashuv (6px kechirimli masofa bilan)
+          const p = 6;
+          if (
+            dinoState.x + p < obs.x + obs.w - p &&
+            dinoState.x + dinoState.w - p > obs.x + p &&
+            dinoState.y + p < obs.y + obs.h &&
+            dinoState.y + dinoState.h > obs.y + p
+          ) {
+            return gameOver("Xatolikka duch kelindi!");
+          }
+
+          if (obs.x + obs.w < 0) {
+            dinoState.obstacles.splice(i, 1);
+            gameScore += 5;
+            updateScoreDisplay();
+          }
+        }
+
+        // Masofaga qarab ball
+        if (dinoState.frame % 15 === 0) {
+          gameScore++;
+          updateScoreDisplay();
+        }
+
+        // Chizish
+        ctx.fillStyle = '#05080E';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Yer chizig'i
+        ctx.strokeStyle = '#10B981';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, groundY);
+        ctx.lineTo(canvas.width, groundY);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
+        ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
+
+        // Kiber Dino
+        ctx.fillStyle = '#06B6D4';
+        ctx.fillRect(dinoState.x, dinoState.y + 4, dinoState.w - 4, dinoState.h - 8);
+        ctx.fillRect(dinoState.x + 8, dinoState.y, 14, 10);
+        ctx.fillStyle = '#F43F5E';
+        ctx.fillRect(dinoState.x + 16, dinoState.y + 2, 3, 3);
+
+        const legOffset = (Math.floor(dinoState.frame / 7) % 2 === 0) ? 2 : -2;
+        ctx.fillStyle = '#06B6D4';
+        ctx.fillRect(dinoState.x + 3, dinoState.y + dinoState.h - 4, 3, 4);
+        ctx.fillRect(dinoState.x + 12 + legOffset, dinoState.y + dinoState.h - 4, 3, 4);
+
+        // To'siqlar
+        dinoState.obstacles.forEach(obs => {
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+          ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+          ctx.strokeStyle = '#EF4444';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(obs.x, obs.y, obs.w, obs.h);
+          ctx.fillStyle = '#EF4444';
+          ctx.font = 'bold 9px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(obs.label, obs.x + obs.w/2, obs.y + 13);
+        });
+
+        gameLoopId = requestAnimationFrame(loop);
+      }
+
+      gameLoopId = requestAnimationFrame(loop);
+    }
+
+    function handleDinoJump() {
+      if (activeGame !== 'dino' || !dinoState) return;
+      if (dinoState.isGrounded) {
+        playCyberSound('copy');
+        dinoState.vy = dinoState.jumpForce;
+        dinoState.isGrounded = false;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 3-O'YIN: KIBER ARKANOID (BREAKER) — SEKIN TO'P & 3 TA JON
+    // -------------------------------------------------------------
+    let breakerState = null;
+
+    function initBreakerGame() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const paddleW = 82, paddleH = 8; // Keng, oson tutiladigan raketka (82px)
+      const ballR = 5;
+
+      const brickRows = 4, brickCols = 7;
+      const brickW = 38, brickH = 11, brickPadding = 5, brickOffsetTop = 25, brickOffsetLeft = 11;
+      const bricks = [];
+      const rowLabels = ["1C", "AI", "ERP", "SQL"];
+      const rowColors = ["#F59E0B", "#06B6D4", "#A855F7", "#10B981"];
+
+      for (let r = 0; r < brickRows; r++) {
+        bricks[r] = [];
+        for (let c = 0; c < brickCols; c++) {
+          bricks[r][c] = { x: 0, y: 0, status: 1, label: rowLabels[r], color: rowColors[r] };
+        }
+      }
+
+      breakerState = {
+        paddleX: (canvas.width - paddleW) / 2,
+        paddleW, paddleH,
+        ballX: canvas.width / 2,
+        ballY: canvas.height - 35,
+        ballDx: 1.3, ballDy: -1.4, // Sekin va ravon to'p tezligi
+        ballR,
+        lives: 3, // 3 ta jon!
+        bricks,
+        brickRows, brickCols,
+        brickW, brickH, brickPadding,
+        brickOffsetTop, brickOffsetLeft
+      };
+
+      updateScoreDisplay();
+
+      function loop() {
+        if (!isGameRunning || activeGame !== 'breaker') return;
+
+        // To'p harakati
+        breakerState.ballX += breakerState.ballDx;
+        breakerState.ballY += breakerState.ballDy;
+
+        // Devorlar
+        if (breakerState.ballX + breakerState.ballR > canvas.width || breakerState.ballX - breakerState.ballR < 0) {
+          breakerState.ballDx = -breakerState.ballDx;
+          playCyberSound('click');
+        }
+        if (breakerState.ballY - breakerState.ballR < 0) {
+          breakerState.ballDy = -breakerState.ballDy;
+          playCyberSound('click');
+        }
+
+        // Raketka (Paddle)
+        if (breakerState.ballY + breakerState.ballR >= canvas.height - breakerState.paddleH - 12) {
+          if (
+            breakerState.ballX > breakerState.paddleX - 4 &&
+            breakerState.ballX < breakerState.paddleX + breakerState.paddleW + 4
+          ) {
+            playCyberSound('copy');
+            const hitPoint = breakerState.ballX - (breakerState.paddleX + breakerState.paddleW / 2);
+            breakerState.ballDx = hitPoint * 0.08;
+            breakerState.ballDy = -Math.abs(breakerState.ballDy);
+          } else if (breakerState.ballY > canvas.height) {
+            breakerState.lives--;
+            updateScoreDisplay();
+            if (breakerState.lives > 0) {
+              playCyberSound('click');
+              showToast(`To'p tushdi! Qolgan jon: ${breakerState.lives}`);
+              breakerState.ballX = breakerState.paddleX + breakerState.paddleW / 2;
+              breakerState.ballY = canvas.height - breakerState.paddleH - 18;
+              breakerState.ballDx = 1.3 * (Math.random() > 0.5 ? 1 : -1);
+              breakerState.ballDy = -1.4;
+            } else {
+              return gameOver("Barcha jonlar tugadi!");
+            }
+          }
+        }
+
+        // Bloklar
+        let allCleared = true;
+        for (let r = 0; r < breakerState.brickRows; r++) {
+          for (let c = 0; c < breakerState.brickCols; c++) {
+            const b = breakerState.bricks[r][c];
+            if (b.status === 1) {
+              allCleared = false;
+              if (
+                breakerState.ballX > b.x &&
+                breakerState.ballX < b.x + breakerState.brickW &&
+                breakerState.ballY > b.y &&
+                breakerState.ballY < b.y + breakerState.brickH
+              ) {
+                breakerState.ballDy = -breakerState.ballDy;
+                b.status = 0;
+                gameScore += 15;
+                updateScoreDisplay();
+                playCyberSound('copy');
+              }
+            }
+          }
+        }
+
+        if (allCleared) {
+          return gameOver("G'ALABA! Barcha bloklar buzildi!");
+        }
+
+        // Chizish
+        ctx.fillStyle = '#05080E';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Bloklar
+        for (let r = 0; r < breakerState.brickRows; r++) {
+          for (let c = 0; c < breakerState.brickCols; c++) {
+            if (breakerState.bricks[r][c].status === 1) {
+              const bx = c * (breakerState.brickW + breakerState.brickPadding) + breakerState.brickOffsetLeft;
+              const by = r * (breakerState.brickH + breakerState.brickPadding) + breakerState.brickOffsetTop;
+              breakerState.bricks[r][c].x = bx;
+              breakerState.bricks[r][c].y = by;
+
+              ctx.fillStyle = breakerState.bricks[r][c].color;
+              ctx.fillRect(bx, by, breakerState.brickW, breakerState.brickH);
+
+              ctx.fillStyle = '#05080E';
+              ctx.font = 'bold 8px monospace';
+              ctx.textAlign = 'center';
+              ctx.fillText(breakerState.bricks[r][c].label, bx + breakerState.brickW/2, by + 8);
+            }
+          }
+        }
+
+        // To'p
+        ctx.beginPath();
+        ctx.arc(breakerState.ballX, breakerState.ballY, breakerState.ballR, 0, Math.PI * 2);
+        ctx.fillStyle = '#06B6D4';
+        ctx.fill();
+        ctx.closePath();
+
+        // Raketka
+        ctx.fillStyle = '#10B981';
+        ctx.fillRect(breakerState.paddleX, canvas.height - breakerState.paddleH - 10, breakerState.paddleW, breakerState.paddleH);
+
+        gameLoopId = requestAnimationFrame(loop);
+      }
+
+      gameLoopId = requestAnimationFrame(loop);
+    }
+
+    function handleBreakerMove(dir) {
+      if (activeGame !== 'breaker' || !breakerState) return;
+      breakerState.paddleX = Math.max(0, Math.min(320 - breakerState.paddleW, breakerState.paddleX + dir));
+    }
+
+    function drawGamePreview() {
+      const canvas = document.getElementById('game-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#05080E';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(168, 85, 247, 0.2)';
+      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+    }
+
+    // Klaviatura tinglovchisi (Barcha 3 o'yin uchun)
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('game-modal');
+      if (!modal || !modal.classList.contains('active')) return;
+
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+        if (activeGame === 'snake') { e.preventDefault(); handleGameDirection('UP'); }
+        else if (activeGame === 'dino') { e.preventDefault(); handleDinoJump(); }
+      } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+        if (activeGame === 'snake') { e.preventDefault(); handleGameDirection('DOWN'); }
+      } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        if (activeGame === 'snake') { e.preventDefault(); handleGameDirection('LEFT'); }
+        else if (activeGame === 'breaker') { e.preventDefault(); handleBreakerMove(-25); }
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        if (activeGame === 'snake') { e.preventDefault(); handleGameDirection('RIGHT'); }
+        else if (activeGame === 'breaker') { e.preventDefault(); handleBreakerMove(25); }
+      } else if (e.code === 'Space') {
+        if (activeGame === 'dino') { e.preventDefault(); handleDinoJump(); }
+      }
+    });
+
+    // Sensor / Sichqoncha bilan Canvas ustida boshqarish
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('game-canvas');
+      if (canvas) {
+        canvas.addEventListener('click', () => {
+          if (activeGame === 'dino') handleDinoJump();
+        });
+        canvas.addEventListener('touchmove', (e) => {
+          if (activeGame === 'breaker' && breakerState && e.touches[0]) {
+            const rect = canvas.getBoundingClientRect();
+            const touchX = ((e.touches[0].clientX - rect.left) / rect.width) * canvas.width;
+            breakerState.paddleX = Math.max(0, Math.min(canvas.width - breakerState.paddleW, touchX - breakerState.paddleW / 2));
+          }
+        });
+      }
+    });
+
     // QR MODAL
     function openQrModal() { playCyberSound('click'); document.getElementById('qr-modal').classList.add('active'); }
     function closeQrModal() { playCyberSound('click'); document.getElementById('qr-modal').classList.remove('active'); }
@@ -1001,11 +1607,18 @@
           resp.innerHTML = `<p class="text-cyan-400 font-bold">Mavjud buyruqlar:</p>
             <p>• <span class="text-emerald-400 font-semibold">skills</span> — Texnik ko'nikmalar</p>
             <p>• <span class="text-emerald-400 font-semibold">contact</span> — Aloqa ma'lumotlari</p>
+            <p>• <span class="text-emerald-400 font-semibold">game</span> — Kiber Arkada o'yinlari (Ilon, Dino, Breaker)</p>
+            <p>• <span class="text-emerald-400 font-semibold">music</span> — Passacaglia musiqasi</p>
             <p>• <span class="text-emerald-400 font-semibold">1c</span> — 1C yechimlari</p>
             <p>• <span class="text-emerald-400 font-semibold">time</span> — Farg'ona vaqti</p>
             <p>• <span class="text-emerald-400 font-semibold">clear</span> — Tozalash</p>
             <p>• <span class="text-emerald-400 font-semibold">exit</span> — Yopish</p>`;
           break;
+        case 'game':
+        case 'arcade':
+          toggleTerminal(); openGameModal(); return;
+        case 'music':
+          togglePassacagliaMusic(); return;
         case 'skills':
           resp.innerHTML = `<p class="text-emerald-400 font-bold">Yo'nalishlar:</p><p>1C:Korxona 8.3 | ERP | HR | CRM | Soliq & Didox | AI & LLM | Telegram Bot | Face ID | Web & Mobil</p>`;
           break;
